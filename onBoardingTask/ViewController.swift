@@ -6,16 +6,15 @@ class ViewController: UIViewController {
     let safetyArea =  UIView()
     let newTiTle =  UILabel()
     let newBooks =  UITableView()
-    
+    var resultNewBook:[NewBook] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadData()
         setUpUI()
         
         newBooks.dataSource = self
         newBooks.delegate = self
-        newBooks.register(NewBookCell.self, forCellReuseIdentifier: "newBook")
-        //loadData()
     }
     
     func setUpUI(){
@@ -25,31 +24,34 @@ class ViewController: UIViewController {
         setContraint()
     }
     
-//    func loadData(){
-//        let urlString = ""
-//        if let url  =  URL(string:urlString) {
-//            let urlRequest =  URLRequest(url: url)
-//            let session =  URLSession(configuration: .default)
-//            print("데이터 로드할 예정 / \(urlString)")
-//            session.dataTask(with: urlRequest) { data, res, err in
-//                if let err = err {
-//                    print("error :\(err.localizedDescription)")
-//                    return
-//                }
-//                if let data = data {
-//                    do {
-//                        print("aaa")
-//                        let decodeData =  try JSONDecoder().decode(NewBook.self, from: data)
-//                        print("이건 되겠지\(decodeData)")
-//                    }catch{
-//                       "\(error.localizedDescription)"
-//                    }
-//                }
-//                print("허허허")
-//            }
-//        }
-//        print("하하하")
-//    }
+    //urlSession
+    func loadData(){
+        let baseUrl  =  URL(string: "https://api.itbook.store/1.0/")
+        let newComponent = URL(string: "new", relativeTo: baseUrl)!
+        let config  =  URLSessionConfiguration.default
+        let session  =  URLSession(configuration: config)
+        
+        let newUrl  = newComponent.absoluteURL
+        let dataTask = session.dataTask(with: newUrl) { (data, res, err) in
+            guard err == nil else { return }
+            guard let statusCode = (res as? HTTPURLResponse)?.statusCode else {return}
+            let statusRange = 200..<300
+            if statusRange.contains(statusCode) {
+                guard let data = data else { return }
+                do {
+                    let decoder  =  JSONDecoder()
+                    let result = try decoder.decode(NewBook.self, from: data)
+                    self.resultNewBook.append(result)
+                    DispatchQueue.main.async {
+                        self.newBooks.reloadData()
+                    }
+                }catch let error {
+                    print("\(error.localizedDescription)")
+                }
+            }
+        }
+        dataTask.resume()
+    }
     
     // 속성
     func setAttribute(){
@@ -75,7 +77,6 @@ class ViewController: UIViewController {
             make.top.equalTo(newTiTle.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
         }
-       
     }
     
     // safeArea존 생성
@@ -94,7 +95,7 @@ class ViewController: UIViewController {
 
 extension ViewController :  UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return resultNewBook.first?.books.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -102,24 +103,23 @@ extension ViewController :  UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        newBooks.register(NewBookCell.self, forCellReuseIdentifier: "newBook")
+        
         let cell =  tableView.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as! NewBookCell
         
-        // 데이터 받아서 할당해줄 부분
-        cell.mainTitle.text = "제목"
-        cell.subTitle.text = "소제목"
-        cell.price.text = "가격"
-        cell.isbn13.text = "isbn13"
-        
-        cell.selectionStyle = .none
-        cell.contentView.addSubview(cell.newBookList)
-
-        cell.newBookList.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 300, height: 280))
-            make.center.equalToSuperview()
+        if let result  =  resultNewBook.first?.books  {
+            
+            cell.selectionStyle = .none
+            cell.contentView.addSubview(cell.newBookList)
+            
+            cell.newBookList.snp.makeConstraints { make in
+                make.size.equalTo(CGSize(width: 300, height: 280))
+                make.center.equalToSuperview()
+            }
+            
+            cell.setUpCellUI()
+            cell.setUpValue(result[indexPath.item])
         }
-       
-        cell.setUpCellUI()
-        
         return cell
     }
 }
@@ -129,7 +129,8 @@ class NewBookCell : UITableViewCell{
     let newBookList  =  UIView()
     let bookImg =  UIView()
     let bookInfo =  UIView()
-    var mainTitle = UILabel()
+    let thumbnail =  UIImageView()
+    let mainTitle = UILabel()
     let subTitle = UILabel()
     let price = UILabel()
     let isbn13 = UILabel()
@@ -140,13 +141,32 @@ class NewBookCell : UITableViewCell{
         setAttribute()
     }
     
+    func setUpValue( _ book :Books){
+        mainTitle.text = book.title
+        subTitle.text = book.subtitle
+        price.text = book.price
+        isbn13.text = book.isbn13
+        showThumbnail(book.image)
+    }
+    
+    func showThumbnail(_ imageUrl : String){
+        let url =  URL(string: imageUrl)
+        if let data = try? Data(contentsOf: url!){
+            DispatchQueue.main.async {
+                self.thumbnail.image = UIImage(data: data)
+                
+            }
+        }
+    }
+    
     func setAttribute(){
         newBookList.layer.cornerRadius = 10
         newBookList.clipsToBounds = true
         bookImg.backgroundColor = .systemGray5
         bookInfo.backgroundColor = .systemGray3
-        mainTitle.font = UIFont.systemFont(ofSize: 20, weight: .heavy)
-        subTitle.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+       thumbnail.contentMode = .scaleAspectFit
+        mainTitle.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        subTitle.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         isbn13.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         price.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         mainTitle.textAlignment = .center
@@ -158,6 +178,7 @@ class NewBookCell : UITableViewCell{
     func setView(){
         newBookList.addSubview(bookInfo)
         newBookList.addSubview(bookImg)
+        bookImg.addSubview(thumbnail)
         bookInfo.addSubview(mainTitle)
         bookInfo.addSubview(subTitle)
         bookInfo.addSubview(isbn13)
@@ -166,6 +187,11 @@ class NewBookCell : UITableViewCell{
     
     
     func setContraint(){
+        
+        thumbnail.snp.makeConstraints { make in
+            make.height.equalTo(190)
+            make.center.equalToSuperview()
+        }
         bookImg.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(2.0/3.0)
@@ -175,24 +201,34 @@ class NewBookCell : UITableViewCell{
             make.leading.bottom.trailing.equalToSuperview()
         }
         mainTitle.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(10)
             make.top.equalToSuperview().offset(5)
-
-        }
-        subTitle.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(30)
-        }
-        isbn13.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(50)
-
-        }
-        price.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(65)
             
         }
+        subTitle.snp.makeConstraints { make in
+                    make.leading.trailing.equalToSuperview()
+            make.top.equalTo(mainTitle.snp_bottomMargin).offset(10)
+                }
+        isbn13.snp.makeConstraints { make in
+                   make.leading.trailing.equalToSuperview()
+            make.top.equalTo(mainTitle.snp_bottomMargin).offset(30)
+               }
+        price.snp.makeConstraints { make in
+                    make.leading.trailing.equalToSuperview()
+            make.top.equalTo(isbn13.snp_bottomMargin).offset(10)
+                }
+//        subTitle.snp.makeConstraints { make in
+//            make.leading.trailing.equalToSuperview()
+//            make.top.equalToSuperview().offset(30)
+//        }
+//        isbn13.snp.makeConstraints { make in
+//            make.leading.trailing.equalToSuperview()
+//            make.top.equalToSuperview().offset(50)
+//        }
+//        price.snp.makeConstraints { make in
+//            make.leading.trailing.equalToSuperview()
+//            make.top.equalToSuperview().offset(65)
+//        }
     }
 }
 
