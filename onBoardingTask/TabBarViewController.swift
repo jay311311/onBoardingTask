@@ -13,7 +13,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let newTab =  ViewController()
+        let newTab =  NewBookViewController()
         let searchTab =  SearchViewController()
         
         newTab.title = "New"
@@ -25,14 +25,8 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         newTab.tabBarItem = tabBarItem1
         searchTab.tabBarItem = tabBarItem2
         
-       // tabBarItem1.se
-        
-        
-//        let newNav = UINavigationController(rootViewController: newTab)
-//        let searchNav = UINavigationController(rootViewController: searchTab)
         
         self.viewControllers = [newTab , searchTab]
-     //   setViewControllers([newNav, searchNav], animated: false)
     }
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {

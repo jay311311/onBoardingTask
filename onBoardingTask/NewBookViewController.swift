@@ -1,10 +1,9 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController {
+class NewBookViewController: UIViewController {
     
     let safetyArea =  UIView()
-    let newTiTle =  UILabel()
     let newBooks =  UITableView()
     var resultNewBook:[NewBook] = []
     
@@ -15,6 +14,8 @@ class ViewController: UIViewController {
         self.view.backgroundColor = .white
         newBooks.dataSource = self
         newBooks.delegate = self
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.topItem?.title = "New Books"
     }
     
     func setUpUI(){
@@ -55,26 +56,20 @@ class ViewController: UIViewController {
     
     // 속성
     func setAttribute(){
-        newTiTle.text  = "New Title"
-        newTiTle.font =  UIFont.systemFont(ofSize: CGFloat(30), weight: .bold)
+      
         newBooks.separatorStyle = .none
     }
     
     // 뷰의 구성
     func setView(){
-        safetyArea.addSubview(newTiTle)
         safetyArea.addSubview(newBooks)
     }
     
     // 구성요소 제약
     func setContraint(){
-        newTiTle.snp.makeConstraints { make in
-            make.leading.equalTo(safetyArea).offset(20)
-            make.top.equalTo(safetyArea).offset(40)
-            make.trailing.equalToSuperview()
-        }
+    
         newBooks.snp.makeConstraints { make in
-            make.top.equalTo(newTiTle.snp.bottom)
+            make.top.equalToSuperview()
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -93,7 +88,7 @@ class ViewController: UIViewController {
 }
 
 
-extension ViewController :  UITableViewDelegate, UITableViewDataSource{
+extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultNewBook.first?.books.count ?? 0
     }
@@ -117,6 +112,13 @@ extension ViewController :  UITableViewDelegate, UITableViewDataSource{
         }
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let secondVC = DetailBookViewController()
+        self.navigationController?.pushViewController(secondVC, animated: true)
+        print(indexPath.item)
+    }
+    
 }
 
 
@@ -149,7 +151,6 @@ class NewBookCell : UITableViewCell{
         if let data = try? Data(contentsOf: url!){
             DispatchQueue.main.async {
                 self.thumbnail.image = UIImage(data: data)
-                
             }
         }
     }
