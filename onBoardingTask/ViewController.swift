@@ -12,7 +12,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         loadData()
         setUpUI()
-        
+        self.view.backgroundColor = .white
         newBooks.dataSource = self
         newBooks.delegate = self
     }
@@ -111,12 +111,7 @@ extension ViewController :  UITableViewDelegate, UITableViewDataSource{
             
             cell.selectionStyle = .none
             cell.contentView.addSubview(cell.newBookList)
-            
-            cell.newBookList.snp.makeConstraints { make in
-                make.size.equalTo(CGSize(width: 300, height: 280))
-                make.center.equalToSuperview()
-            }
-            
+
             cell.setUpCellUI()
             cell.setUpValue(result[indexPath.item])
         }
@@ -164,7 +159,7 @@ class NewBookCell : UITableViewCell{
         newBookList.clipsToBounds = true
         bookImg.backgroundColor = .systemGray5
         bookInfo.backgroundColor = .systemGray3
-       thumbnail.contentMode = .scaleAspectFit
+        thumbnail.contentMode = .scaleAspectFit
         mainTitle.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         subTitle.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         isbn13.font = UIFont.systemFont(ofSize: 12, weight: .bold)
@@ -187,7 +182,10 @@ class NewBookCell : UITableViewCell{
     
     
     func setContraint(){
-        
+        newBookList.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 300, height: 280))
+            make.center.equalToSuperview()
+        }
         thumbnail.snp.makeConstraints { make in
             make.height.equalTo(190)
             make.center.equalToSuperview()
@@ -206,31 +204,20 @@ class NewBookCell : UITableViewCell{
             
         }
         subTitle.snp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperview()
-            make.top.equalTo(mainTitle.snp_bottomMargin).offset(10)
-                }
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(mainTitle.snp.bottom).offset(0)
+        }
         isbn13.snp.makeConstraints { make in
-                   make.leading.trailing.equalToSuperview()
-            make.top.equalTo(mainTitle.snp_bottomMargin).offset(30)
-               }
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(mainTitle.snp.bottom).offset(20)
+        }
         price.snp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperview()
-            make.top.equalTo(isbn13.snp_bottomMargin).offset(10)
-                }
-//        subTitle.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview()
-//            make.top.equalToSuperview().offset(30)
-//        }
-//        isbn13.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview()
-//            make.top.equalToSuperview().offset(50)
-//        }
-//        price.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview()
-//            make.top.equalToSuperview().offset(65)
-//        }
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(isbn13.snp.bottom).offset(10)
+        }
     }
 }
+
 
 
 
