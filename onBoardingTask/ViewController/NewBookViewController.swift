@@ -5,21 +5,20 @@ class NewBookViewController: UIViewController {
     
     let safetyArea =  UIView()
     let newBooks =  UITableView()
-    var resultNewBook:[NewBook] = []
-    
+    //
+  
+    var resultNewBook: [NewBook] =  []
     override func viewDidLoad() {
-        loadData()
-        
+        getData()
         super.viewDidLoad()
         self.view.backgroundColor = .white
         setUpUI()
         
         newBooks.dataSource = self
         newBooks.delegate = self
-        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.topItem?.title = "New Books"
-        
+
     }
     
     func setUpUI(){
@@ -29,33 +28,14 @@ class NewBookViewController: UIViewController {
         setContraint()
     }
     
-    //urlSession
-    func loadData(){
-        let baseUrl  =  URL(string: "https://api.itbook.store/1.0/")
-        let newComponent = URL(string: "new", relativeTo: baseUrl)!
-        let config  =  URLSessionConfiguration.default
-        let session  =  URLSession(configuration: config)
-        let newUrl  = newComponent.absoluteURL
-        let dataTask = session.dataTask(with: newUrl) { [weak self] (data, res, err) in
-            guard err == nil else { return }
-            guard let statusCode = (res as? HTTPURLResponse)?.statusCode else {return}
-            let statusRange = 200..<300
-            if statusRange.contains(statusCode) {
-                guard let data = data else { return }
-                do {
-                    let decoder  =  JSONDecoder()
-                    let result = try decoder.decode(NewBook.self, from: data)
-                    self?.resultNewBook = [result]
-                    DispatchQueue.main.async {
-                        self?.newBooks.reloadData()
-                    }
-                }catch let error {
-                    print("\(error.localizedDescription)")
-                }
-            }
+    func getData(){
+        let viewMoedel = ViewModel().loadData { data in
+            self.resultNewBook.append(data)
+            print(" 확인용 data :  \(self.resultNewBook)")
+            self.newBooks.reloadData()
         }
-        dataTask.resume()
     }
+
     
     // 속성
     func setAttribute(){

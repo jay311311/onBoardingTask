@@ -18,6 +18,7 @@
 		C3EB833F286A825800D2A4BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3EB833E286A825800D2A4BB /* Assets.xcassets */; };
 		C3EB8342286A825800D2A4BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3EB8340286A825800D2A4BB /* LaunchScreen.storyboard */; };
 		C3EB834A286A976700D2A4BB /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EB8349286A976700D2A4BB /* Model.swift */; };
+		C3ED992E286D656E00EC36D6 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3ED992D286D656E00EC36D6 /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		C3EB8341286A825800D2A4BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C3EB8343286A825800D2A4BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3EB8349286A976700D2A4BB /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		C3ED992D286D656E00EC36D6 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		C72A32284E5B96A1E85DB3F9 /* Pods_onBoardingTask.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_onBoardingTask.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -91,16 +93,25 @@
 				C3EB8335286A825700D2A4BB /* AppDelegate.swift */,
 				C3EB8349286A976700D2A4BB /* Model.swift */,
 				C3EB8337286A825700D2A4BB /* SceneDelegate.swift */,
-				C3EB8339286A825700D2A4BB /* NewBookViewController.swift */,
-				C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */,
-				C391CC18286C22C000A21DD8 /* SearchViewController.swift */,
-				C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */,
+				C3ED992D286D656E00EC36D6 /* ViewModel.swift */,
+				C3ED992C286D653F00EC36D6 /* ViewController */,
 				C3EB833B286A825700D2A4BB /* Main.storyboard */,
 				C3EB833E286A825800D2A4BB /* Assets.xcassets */,
 				C3EB8340286A825800D2A4BB /* LaunchScreen.storyboard */,
 				C3EB8343286A825800D2A4BB /* Info.plist */,
 			);
 			path = onBoardingTask;
+			sourceTree = "<group>";
+		};
+		C3ED992C286D653F00EC36D6 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */,
+				C3EB8339286A825700D2A4BB /* NewBookViewController.swift */,
+				C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */,
+				C391CC18286C22C000A21DD8 /* SearchViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,6 +234,7 @@
 				C3EB8336286A825700D2A4BB /* AppDelegate.swift in Sources */,
 				C3EB8338286A825700D2A4BB /* SceneDelegate.swift in Sources */,
 				C391CC17286C1AD200A21DD8 /* TabBarViewController.swift in Sources */,
+				C3ED992E286D656E00EC36D6 /* ViewModel.swift in Sources */,
 				C391CC1D286C3EED00A21DD8 /* DetailBookViewController.swift in Sources */,
 				C3EB834A286A976700D2A4BB /* Model.swift in Sources */,
 			);
