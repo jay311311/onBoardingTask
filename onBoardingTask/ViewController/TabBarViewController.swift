@@ -4,8 +4,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       // self.tabBar.tintColor = .accent
-        
         self.delegate = self
     }
     
@@ -16,7 +14,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         let newTab =  NewBookViewController()
         let searchTab =  SearchViewController()
         
-        newTab.title = "New"
+        newTab.title = "New Books"
         searchTab.title = "Search"
         
         newTab.navigationItem.largeTitleDisplayMode = .always
@@ -27,7 +25,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         
         nav1.navigationBar.prefersLargeTitles = true
         nav2.navigationBar.prefersLargeTitles = true
-
         
         let tabBarItem1 =  UITabBarItem(title: "New", image: UIImage(systemName: "book"), selectedImage: UIImage(systemName: "book"))
         let tabBarItem2 =  UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))

@@ -7,6 +7,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.title = "Detail Book"
 //        self.title = "2"
         //self.title = "2"
 //        navigationController?.navigationBar.prefersLargeTitles = true

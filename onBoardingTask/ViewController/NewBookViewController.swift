@@ -5,9 +5,9 @@ class NewBookViewController: UIViewController {
     
     let safetyArea =  UIView()
     let newBooks =  UITableView()
-    //
-  
+    
     var resultNewBook: [NewBook] =  []
+    
     override func viewDidLoad() {
         getData()
         super.viewDidLoad()
@@ -16,9 +16,6 @@ class NewBookViewController: UIViewController {
         
         newBooks.dataSource = self
         newBooks.delegate = self
-//        navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationController?.navigationBar.topItem?.title = "New Books"
-
     }
     
     func setUpUI(){
@@ -29,9 +26,9 @@ class NewBookViewController: UIViewController {
     }
     
     func getData(){
-        let viewMoedel = ViewModel().loadData { data in
-            self.resultNewBook.append(data)
-            print(" 확인용 data :  \(self.resultNewBook)")
+        ViewModel().loadData(query: "new", returnType: NewBook.self) { item in
+            print("새책 확인 :\(item)")
+            self.resultNewBook.append(item)
             self.newBooks.reloadData()
         }
     }
@@ -82,20 +79,19 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
         
         let cell =  tableView.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as! NewBookCell
         
-        if let result  =  resultNewBook.first?.books  {
+        guard let result =  resultNewBook.first?.books else { return   UITableViewCell() }
             cell.selectionStyle = .none
             cell.contentView.addSubview(cell.newBookList)
-
             cell.setUpCellUI()
             cell.setUpValue(result[indexPath.item])
-        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let secondVC = DetailBookViewController()
-        self.navigationController?.pushViewController(secondVC, animated: true)
-        print(indexPath.item)
+        let detailVC = DetailBookViewController()
+        self.navigationController?.pushViewController(detailVC, animated: true)
+        detailVC.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
     }
 }
 
@@ -184,11 +180,11 @@ class NewBookCell : UITableViewCell{
         }
         subTitle.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(mainTitle.snp.bottom).offset(0)
+            make.top.equalTo(mainTitle.snp.bottom).offset(3)
         }
         isbn13.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(mainTitle.snp.bottom).offset(20)
+            make.top.equalTo(mainTitle.snp.bottom).offset(25)
         }
         price.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -197,6 +193,10 @@ class NewBookCell : UITableViewCell{
     }
 }
 
+
+class setSafeAreaZon : UIView{
+    
+}
 
 
 
