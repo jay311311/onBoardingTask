@@ -16,8 +16,8 @@ class NewBookViewController: UIViewController {
         
         newBooks.dataSource = self
         newBooks.delegate = self
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.topItem?.title = "New Books"
+//        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationController?.navigationBar.topItem?.title = "New Books"
 
     }
     
