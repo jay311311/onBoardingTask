@@ -11,7 +11,6 @@
 		C391CC17286C1AD200A21DD8 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */; };
 		C391CC19286C22C000A21DD8 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC18286C22C000A21DD8 /* SearchViewController.swift */; };
 		C391CC1D286C3EED00A21DD8 /* DetailBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */; };
-		C391CC1F286C4A7A00A21DD8 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC1E286C4A7A00A21DD8 /* RootViewController.swift */; };
 		C3EB8336286A825700D2A4BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EB8335286A825700D2A4BB /* AppDelegate.swift */; };
 		C3EB8338286A825700D2A4BB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EB8337286A825700D2A4BB /* SceneDelegate.swift */; };
 		C3EB833A286A825700D2A4BB /* NewBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EB8339286A825700D2A4BB /* NewBookViewController.swift */; };
@@ -27,7 +26,6 @@
 		C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		C391CC18286C22C000A21DD8 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookViewController.swift; sourceTree = "<group>"; };
-		C391CC1E286C4A7A00A21DD8 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		C3EB8332286A825700D2A4BB /* onBoardingTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = onBoardingTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3EB8335286A825700D2A4BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3EB8337286A825700D2A4BB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 				C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */,
 				C391CC18286C22C000A21DD8 /* SearchViewController.swift */,
 				C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */,
-				C391CC1E286C4A7A00A21DD8 /* RootViewController.swift */,
 				C3EB833B286A825700D2A4BB /* Main.storyboard */,
 				C3EB833E286A825800D2A4BB /* Assets.xcassets */,
 				C3EB8340286A825800D2A4BB /* LaunchScreen.storyboard */,
@@ -227,7 +224,6 @@
 				C3EB8338286A825700D2A4BB /* SceneDelegate.swift in Sources */,
 				C391CC17286C1AD200A21DD8 /* TabBarViewController.swift in Sources */,
 				C391CC1D286C3EED00A21DD8 /* DetailBookViewController.swift in Sources */,
-				C391CC1F286C4A7A00A21DD8 /* RootViewController.swift in Sources */,
 				C3EB834A286A976700D2A4BB /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

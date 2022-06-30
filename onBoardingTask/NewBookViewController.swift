@@ -8,14 +8,18 @@ class NewBookViewController: UIViewController {
     var resultNewBook:[NewBook] = []
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         loadData()
-        setUpUI()
+        
+        super.viewDidLoad()
         self.view.backgroundColor = .white
+        setUpUI()
+        
         newBooks.dataSource = self
         newBooks.delegate = self
+        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.topItem?.title = "New Books"
+        
     }
     
     func setUpUI(){
@@ -31,9 +35,8 @@ class NewBookViewController: UIViewController {
         let newComponent = URL(string: "new", relativeTo: baseUrl)!
         let config  =  URLSessionConfiguration.default
         let session  =  URLSession(configuration: config)
-        
         let newUrl  = newComponent.absoluteURL
-        let dataTask = session.dataTask(with: newUrl) { (data, res, err) in
+        let dataTask = session.dataTask(with: newUrl) { [weak self] (data, res, err) in
             guard err == nil else { return }
             guard let statusCode = (res as? HTTPURLResponse)?.statusCode else {return}
             let statusRange = 200..<300
@@ -42,9 +45,9 @@ class NewBookViewController: UIViewController {
                 do {
                     let decoder  =  JSONDecoder()
                     let result = try decoder.decode(NewBook.self, from: data)
-                    self.resultNewBook.append(result)
+                    self?.resultNewBook = [result]
                     DispatchQueue.main.async {
-                        self.newBooks.reloadData()
+                        self?.newBooks.reloadData()
                     }
                 }catch let error {
                     print("\(error.localizedDescription)")
@@ -56,7 +59,6 @@ class NewBookViewController: UIViewController {
     
     // 속성
     func setAttribute(){
-      
         newBooks.separatorStyle = .none
     }
     
@@ -67,7 +69,6 @@ class NewBookViewController: UIViewController {
     
     // 구성요소 제약
     func setContraint(){
-    
         newBooks.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.trailing.bottom.equalToSuperview()
@@ -78,7 +79,6 @@ class NewBookViewController: UIViewController {
     func setSafeAreaZon(){
         safetyArea.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(safetyArea)
-        
         let guide =  view.safeAreaLayoutGuide
         safetyArea.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
         safetyArea.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
@@ -103,7 +103,6 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
         let cell =  tableView.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as! NewBookCell
         
         if let result  =  resultNewBook.first?.books  {
-            
             cell.selectionStyle = .none
             cell.contentView.addSubview(cell.newBookList)
 
@@ -118,7 +117,6 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
         self.navigationController?.pushViewController(secondVC, animated: true)
         print(indexPath.item)
     }
-    
 }
 
 
