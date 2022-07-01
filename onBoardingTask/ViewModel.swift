@@ -46,4 +46,14 @@ class ViewModel{
         }
         dataTask.resume()
     }
+    
+    // String으로 된 이미지 파일 파싱
+    func showThumbnail(_ imageUrl : String,  completion : @escaping (Data) -> Void  ){
+        let url =  URL(string: imageUrl)
+        if let data = try? Data(contentsOf: url!){
+            DispatchQueue.main.async {
+                completion(data)
+            }
+        }
+    }
 }

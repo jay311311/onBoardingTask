@@ -64,6 +64,9 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = DetailBookViewController()
+        // 오~~~~~~ 아주아주 획기적입니다!!
+        detailVC.hidesBottomBarWhenPushed = true
+        
         self.navigationController?.pushViewController(detailVC, animated: true)
         detailVC.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
     }

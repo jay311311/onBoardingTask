@@ -2,6 +2,7 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
     
+    let viewModel =  ViewModel()
     override init(style :UITableViewCell.CellStyle , reuseIdentifier : String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -60,67 +61,62 @@ class TableViewCell: UITableViewCell {
         return label
     }()
     
-    
     func setUpValue( _ book :Books){
         mainTitle.text = book.title
         subTitle.text = book.subtitle
         price.text = book.price
         isbn13.text = book.isbn13
-        showThumbnail(book.image)
-    }
-    
-    func showThumbnail(_ imageUrl : String){
-        let url =  URL(string: imageUrl)
-        if let data = try? Data(contentsOf: url!){
-            DispatchQueue.main.async {
-                self.thumbnail.image = UIImage(data: data)
-            }
+        viewModel.showThumbnail(book.image) { data in
+            self.thumbnail.image = UIImage(data: data)
         }
     }
     
     func setView(){
-        newBookList.addSubview(bookImg)
-        newBookList.addSubview(bookInfo)
         newBookList.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 300, height: 280))
             make.center.equalToSuperview()
         }
         
-        bookImg.addSubview(thumbnail)
+        newBookList.addSubview(bookImg)
         bookImg.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(2.0/3.0)
         }
+        
+        newBookList.addSubview(bookInfo)
+        bookInfo.snp.makeConstraints { make in
+            make.height.equalToSuperview().multipliedBy(1.0/3.0)
+            make.leading.bottom.trailing.equalToSuperview()
+        }
+        
+        bookImg.addSubview(thumbnail)
         thumbnail.snp.makeConstraints { make in
             make.height.equalTo(190)
             make.center.equalToSuperview()
         }
         
         bookInfo.addSubview(mainTitle)
-        bookInfo.addSubview(subTitle)
-        bookInfo.addSubview(isbn13)
-        bookInfo.addSubview(price)
-        bookInfo.snp.makeConstraints { make in
-            make.height.equalToSuperview().multipliedBy(1.0/3.0)
-            make.leading.bottom.trailing.equalToSuperview()
-        }
         mainTitle.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(10)
             make.top.equalToSuperview().offset(5)
         }
+        
+        bookInfo.addSubview(subTitle)
         subTitle.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(mainTitle.snp.bottom).offset(3)
         }
+        
+        bookInfo.addSubview(isbn13)
         isbn13.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(mainTitle.snp.bottom).offset(25)
         }
+        
+        bookInfo.addSubview(price)
         price.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(isbn13.snp.bottom).offset(5)
         }
     }
-    
-    
 }

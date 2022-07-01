@@ -17,6 +17,7 @@ struct DetailBook:Codable{
     var subtitle :String
     var isbn13: String
     var price : String
+    var image : String
     var url:String
 }
 
