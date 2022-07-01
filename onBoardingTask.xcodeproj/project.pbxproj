@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9DB6936D4E2D489972AF007A /* Pods_onBoardingTask.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72A32284E5B96A1E85DB3F9 /* Pods_onBoardingTask.framework */; };
+		C38BB15A286EAD6300CFE959 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38BB159286EAD6300CFE959 /* TableViewCell.swift */; };
 		C391CC17286C1AD200A21DD8 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */; };
 		C391CC19286C22C000A21DD8 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC18286C22C000A21DD8 /* SearchViewController.swift */; };
 		C391CC1D286C3EED00A21DD8 /* DetailBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */; };
@@ -24,6 +25,7 @@
 /* Begin PBXFileReference section */
 		A0B2E0A6E69D6DBE2D8A3710 /* Pods-onBoardingTask.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onBoardingTask.release.xcconfig"; path = "Target Support Files/Pods-onBoardingTask/Pods-onBoardingTask.release.xcconfig"; sourceTree = "<group>"; };
 		B95F4375196A1DF851848434 /* Pods-onBoardingTask.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onBoardingTask.debug.xcconfig"; path = "Target Support Files/Pods-onBoardingTask/Pods-onBoardingTask.debug.xcconfig"; sourceTree = "<group>"; };
+		C38BB159286EAD6300CFE959 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		C391CC18286C22C000A21DD8 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */,
 				C3EB8339286A825700D2A4BB /* NewBookViewController.swift */,
 				C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */,
+				C38BB159286EAD6300CFE959 /* TableViewCell.swift */,
 				C391CC18286C22C000A21DD8 /* SearchViewController.swift */,
 			);
 			path = ViewController;
@@ -232,6 +235,7 @@
 				C391CC19286C22C000A21DD8 /* SearchViewController.swift in Sources */,
 				C3EB833A286A825700D2A4BB /* NewBookViewController.swift in Sources */,
 				C3EB8336286A825700D2A4BB /* AppDelegate.swift in Sources */,
+				C38BB15A286EAD6300CFE959 /* TableViewCell.swift in Sources */,
 				C3EB8338286A825700D2A4BB /* SceneDelegate.swift in Sources */,
 				C391CC17286C1AD200A21DD8 /* TabBarViewController.swift in Sources */,
 				C3ED992E286D656E00EC36D6 /* ViewModel.swift in Sources */,

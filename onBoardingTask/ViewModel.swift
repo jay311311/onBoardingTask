@@ -1,8 +1,6 @@
 import Foundation
 
-class ViewModel{
-    //var resultNewBook:[NewBook] = []
-    
+class ViewModel{    
     //urlSession
     func makeURL(query:String) -> URL {
         let baseUrl  =  URL(string: "https://api.itbook.store/1.0/")
