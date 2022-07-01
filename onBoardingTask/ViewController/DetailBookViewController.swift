@@ -17,6 +17,7 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         setUpUI()
+        self.title = "Detail"
     }
     
     func sendData(response: String) {

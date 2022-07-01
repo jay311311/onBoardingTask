@@ -7,35 +7,34 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         self.delegate = self
     }
     
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
+    init(){
+        super.init(nibName: nil ,bundle: nil)
         let newTab =  NewBookViewController()
         let searchTab =  SearchViewController()
         
         newTab.title = "New Books"
         searchTab.title = "Search"
         
-        newTab.navigationItem.largeTitleDisplayMode = .always
-        searchTab.navigationItem.largeTitleDisplayMode = .always
+        let newNavi = UINavigationController(rootViewController: newTab)
+        let searchNavi = UINavigationController(rootViewController: searchTab)
         
-        let nav1 = UINavigationController(rootViewController: newTab)
-        let nav2 = UINavigationController(rootViewController: searchTab)
+        newNavi.navigationBar.prefersLargeTitles = true
+        searchNavi.navigationBar.prefersLargeTitles = true
         
-        nav1.navigationBar.prefersLargeTitles = true
-        nav2.navigationBar.prefersLargeTitles = true
-        
-        let tabBarItem1 =  UITabBarItem(title: "New", image: UIImage(systemName: "book"), selectedImage: UIImage(systemName: "book"))
-        let tabBarItem2 =  UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
+        let newTabItem =  UITabBarItem(title: "New", image: UIImage(systemName: "book"), selectedImage: UIImage(systemName: "book"))
+        let searchTabItem =  UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
 
-        newTab.tabBarItem = tabBarItem1
-        searchTab.tabBarItem = tabBarItem2
+        newTab.tabBarItem = newTabItem
+        searchTab.tabBarItem = searchTabItem
         
-        setViewControllers([nav1,nav2], animated: false)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-
+        setViewControllers([newNavi,searchNavi], animated: false)
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+
     
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {

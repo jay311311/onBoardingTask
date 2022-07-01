@@ -4,7 +4,13 @@ import SnapKit
 class NewBookViewController: UIViewController {
     
     let safetyArea =  UIView()
-    let newBooks =  UITableView()
+    let newBooks = UITableView()
+//    let newBooks: UITableView = {
+//        let tableView = UITableView()
+//        tableView.register(<#T##nib: UINib?##UINib?#>, forCellReuseIdentifier: <#T##String#>)
+//        tableView.separatorStyle = .none
+//        return tableView
+//    }()
     
     var resultNewBook: [NewBook] =  []
     
@@ -46,9 +52,8 @@ class NewBookViewController: UIViewController {
     
     // 구성요소 제약
     func setContraint(){
-        newBooks.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.trailing.bottom.equalToSuperview()
+        newBooks.snp.makeConstraints {
+            $0.directionalEdges.equalToSuperview()
         }
     }
     
@@ -104,7 +109,17 @@ class NewBookCell : UITableViewCell{
     let mainTitle = UILabel()
     let subTitle = UILabel()
     let price = UILabel()
-    let isbn13 = UILabel()
+    lazy var isbn13 = UILabel()
+//
+//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+//        super.init(style: style, reuseIdentifier: reuseIdentifier)
+//        addSubview(<#T##view: UIView##UIView#>)
+//        selectionStyle = .none
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     func setUpCellUI() {
         setView()
@@ -188,7 +203,7 @@ class NewBookCell : UITableViewCell{
         }
         price.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(isbn13.snp.bottom).offset(10)
+            make.top.equalTo(isbn13.snp.bottom).offset(5)
         }
     }
 }
