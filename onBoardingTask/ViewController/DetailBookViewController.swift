@@ -30,7 +30,6 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     lazy var subTitle:UILabel = {
         let label =  UILabel()
         label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-
         return label
     }()
     lazy var isbn13:UILabel = {
@@ -43,7 +42,6 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         return label
     }()
-   
     lazy var url:UILabel = {
         let label =  UILabel()
         label.textColor = .tintColor
@@ -65,7 +63,7 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         textView.layer.cornerRadius = 5.0
         return textView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         textView.delegate = self
@@ -76,14 +74,12 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     }
     // delegate 패턴 데이터 전달
     func sendData(response: String) {
-        print("받았다 \(response)")
         sendingIsbn = response
     }
-  
+    
     func getData(){
         lazy var query:String = "books/\(sendingIsbn)"
         ViewModel().loadData(query: "\(query)", returnType: DetailBook.self) { item in
-//            print("디테일 확인 : \(item)")
             self.setUpValue(item)
         }
     }
@@ -98,7 +94,7 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
             self.thumbnail.image = UIImage(data: data)
         }
     }
-
+    
     func setView(){
         view.addSubview(safetyArea)
         safetyArea.snp.makeConstraints {

@@ -1,5 +1,3 @@
-
-
 import UIKit
 
 class SearchViewController: UIViewController {
@@ -12,7 +10,6 @@ class SearchViewController: UIViewController {
     }()
     lazy var searchTable : UITableView = {
         let tableView  =  UITableView()
-//        tableView.separatorStyle = .none
         tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: "searchCell")
         return tableView
     }()
@@ -49,10 +46,7 @@ class SearchViewController: UIViewController {
     }
     func getData(_ searchItem : String){
         viewModel.loadData(query: "search/\(searchItem)", returnType: SearchBook.self) { item in
-           
-                self.searchData.append(item)
-                print(self.searchData)
-            
+            self.searchData.append(item)
             self.searchTable.reloadData()
         }
     }
@@ -61,18 +55,24 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UISearchBarDelegate{
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.setShowsCancelButton(true, animated: true)
+        
         return true
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("취소를 눌렀다유 : \(searchBar.text)")
         searchBar.text = ""
+        searchData = []
+        searchTable.reloadData()
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("검색을 눌렀다유 : \(searchBar.text)")
         guard let item = searchBar.text else { return }
         self.getData(item)
     }
-    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            searchData = []
+            searchTable.reloadData()
+        }
+    }
 }
 
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
@@ -83,14 +83,20 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell  = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as? SearchTableViewCell else { return UITableViewCell() }
         guard let item = searchData.first?.books else { return UITableViewCell() }
-        print("여기까지는 들어오니??\(item[indexPath.item])")
         cell.setValue(item[indexPath.item])
-        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        lazy var detailVC = DetailBookViewController()
+        detailVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(detailVC, animated: true)
+        detailVC.sendData(response: (searchData.first?.books[indexPath.item].isbn13)!)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

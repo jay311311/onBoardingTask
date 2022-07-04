@@ -75,7 +75,6 @@ class SearchTableViewCell: UITableViewCell {
             $0.directionalVerticalEdges.trailing.equalToSuperview()
             $0.width.equalToSuperview().multipliedBy(2.05 / 3.0)
             $0.leading.equalTo(bookImg.snp.trailing)
-           // $0.trailing.equalToSuperview().inset(15)
         }
         
         bookInfo.addSubview(title)
@@ -120,8 +119,5 @@ class SearchTableViewCell: UITableViewCell {
             self.thumbnail.image =  UIImage(data: data)
         }
     }
-  
- 
-
 }
 
