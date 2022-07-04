@@ -4,11 +4,11 @@ import SnapKit
 class NewBookViewController: UIViewController {
     
     var resultNewBook: [NewBook] =  []
-    let safetyArea : UIView = {
+    lazy var safetyArea : UIView = {
         let uiView = UIView()
         return uiView
     }()
-    let newBooks: UITableView = {
+    lazy var newBooks: UITableView = {
         let tableView = UITableView()
         tableView.register(TableViewCell.self, forCellReuseIdentifier: "newBook")
         tableView.separatorStyle = .none

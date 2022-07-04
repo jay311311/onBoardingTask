@@ -4,6 +4,10 @@ struct NewBook:Codable {
     var books : [Books]
 }
 
+struct SearchBook:Codable{
+    var books : [DetailBook]
+}
+
 struct Books:Codable, Hashable{
     var title : String
     var subtitle : String

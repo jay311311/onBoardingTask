@@ -8,6 +8,10 @@ class ViewModel{
         
         if  query.contains("search") {
             // 검색 할 때 사용할 것
+            print("검색할것이 왔느냐?? \(query)")
+            let SearchCompomnent =  URL(string: "\(query)", relativeTo: baseUrl)!
+            let searchUrl  = SearchCompomnent.absoluteURL
+            return searchUrl
            
         }else if query.contains("books") {
             // 책 상세 로드 될 때
@@ -24,7 +28,7 @@ class ViewModel{
         return baseUrl!
        
     }
-    
+    // 추후 예외 처리
     func loadData<T:Codable>  (query:String, returnType :T.Type , completion :  @escaping (T) ->Void) {
         let url  =  makeURL(query: query)
         let dataTask = URLSession.shared.dataTask(with: url) { (data, res, err) in

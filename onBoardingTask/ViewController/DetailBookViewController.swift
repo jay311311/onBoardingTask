@@ -2,57 +2,60 @@ import UIKit
 import SnapKit
 
 class DetailBookViewController: UIViewController, sendDataDelegate {
-    var sendingIsbn : String = ""
+    lazy var sendingIsbn : String = ""
     let viewModel =  ViewModel()
-    let safetyArea:UIView = {
+    lazy var safetyArea:UIView = {
         let view  =  UIView()
         return view
     }()
-    let bookImg : UIView =  {
+    lazy var bookImg : UIView =  {
         let view  =  UIView()
         view.backgroundColor = .systemGray5
         return view
     }()
-    let bookInfo =  UIView()
-    let thumbnail:UIImageView =  {
+    lazy var bookInfo :UIView = {
+        let view  =  UIView()
+        return view
+    }()
+    lazy var thumbnail:UIImageView =  {
         let imageView =  UIImageView()
         imageView.contentMode = .scaleAspectFit
         return imageView
-    } ()
-    let mainTitle:UILabel = {
+    }()
+    lazy var mainTitle:UILabel = {
         let label =  UILabel()
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         return label
     }()
-    let subTitle:UILabel = {
+    lazy var subTitle:UILabel = {
         let label =  UILabel()
         label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
 
         return label
     }()
-    let isbn13:UILabel = {
+    lazy var isbn13:UILabel = {
         let label =  UILabel()
         label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         return label
     }()
-    let price:UILabel = {
+    lazy var price:UILabel = {
         let label =  UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         return label
     }()
    
-    let url:UILabel = {
+    lazy var url:UILabel = {
         let label =  UILabel()
         label.textColor = .tintColor
         return label
     }()
-    let line : UIView = {
+    lazy var line : UIView = {
         let view  =  UIView()
         view.backgroundColor = .systemGray3
         return view
     }()
-    let textView:UITextView = {
-        let textView =  UITextView()
+    lazy var textView:UITextView = {
+        let textView = UITextView()
         let borderColor:UIColor = .systemGray3
         textView.backgroundColor = .white
         textView.text = "메모를 입력해주세요"
@@ -78,7 +81,7 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     }
   
     func getData(){
-        let query:String = "books/\(sendingIsbn)"
+        lazy var query:String = "books/\(sendingIsbn)"
         ViewModel().loadData(query: "\(query)", returnType: DetailBook.self) { item in
 //            print("디테일 확인 : \(item)")
             self.setUpValue(item)
