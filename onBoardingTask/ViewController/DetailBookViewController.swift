@@ -78,8 +78,8 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     }
     
     func getData(){
-        lazy var query:String = "books/\(sendingIsbn)"
-        ViewModel().loadData(query: "\(query)", returnType: DetailBook.self) { item in
+        lazy var query:String = "\(sendingIsbn)"
+        ViewModel().loadData(caseName : .detail ,query: "\(query)", returnType: DetailBook.self) { item in
             self.setUpValue(item)
         }
     }
@@ -129,16 +129,19 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         bookInfo.addSubview(subTitle)
         subTitle.snp.makeConstraints {
             $0.top.equalTo(mainTitle.snp.bottom).offset(15)
+            $0.directionalHorizontalEdges.equalToSuperview()
         }
         
         bookInfo.addSubview(isbn13)
         isbn13.snp.makeConstraints {
             $0.top.equalTo(subTitle.snp.bottom).offset(5)
+            $0.directionalHorizontalEdges.equalToSuperview()
         }
         
         bookInfo.addSubview(price)
         price.snp.makeConstraints {
             $0.top.equalTo(isbn13.snp.bottom).offset(5)
+            $0.directionalHorizontalEdges.equalToSuperview()
         }
         
         bookInfo.addSubview(url)
@@ -165,8 +168,9 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
 
 extension DetailBookViewController: UITextViewDelegate{
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        print("placeholder 사라지는 시점")
+        //print("placeholder 사라지는 시점")
         textView.text = ""
+        textView.textColor = .black
         return true
     }
 }

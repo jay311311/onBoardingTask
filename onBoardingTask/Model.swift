@@ -28,3 +28,10 @@ struct DetailBook:Codable{
 protocol sendDataDelegate{
     func sendData(response: String) -> Void
 }
+
+enum Path :String{
+    case new =  "https://api.itbook.store/1.0/new"
+    case detail = "https://api.itbook.store/1.0/books/"
+    case search =  "https://api.itbook.store/1.0/search/"
+   
+}

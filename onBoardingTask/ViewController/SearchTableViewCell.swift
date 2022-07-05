@@ -19,7 +19,7 @@ class SearchTableViewCell: UITableViewCell {
         image.contentMode = .scaleAspectFit
         return image
     }()
-     var title : UILabel = {
+   lazy  var title : UILabel = {
         let label  =  UILabel()
          label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         return label
@@ -109,7 +109,7 @@ class SearchTableViewCell: UITableViewCell {
     }
     
     func setValue(_ item : DetailBook){
-        print("cell에서는 \(item.title)")
+      //  print("cell에서는 \(item.title)")
         title.text =  item.title
         subTitle.text =  item.subtitle
         isbn13.text = item.isbn13

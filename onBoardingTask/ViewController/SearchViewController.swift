@@ -24,8 +24,11 @@ class SearchViewController: UIViewController {
         searchTable.delegate = self
         searchTable.dataSource = self
         searchBar.delegate = self
+        hidesBottomBarWhenPushed = false
         setView()
     }
+
+    
     
     func setView(){
         view.addSubview(saftyArea)
@@ -45,7 +48,8 @@ class SearchViewController: UIViewController {
         }
     }
     func getData(_ searchItem : String){
-        viewModel.loadData(query: "search/\(searchItem)", returnType: SearchBook.self) { item in
+        viewModel.loadData(caseName : .search ,query: "\(searchItem)", returnType: SearchBook.self) { item in
+            print("갯수는 \(item.books.count)")
             self.searchData.append(item)
             self.searchTable.reloadData()
         }
@@ -55,7 +59,6 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UISearchBarDelegate{
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.setShowsCancelButton(true, animated: true)
-        
         return true
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

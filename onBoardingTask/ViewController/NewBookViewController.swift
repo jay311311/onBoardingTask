@@ -25,7 +25,7 @@ class NewBookViewController: UIViewController {
     }
     
     func getData(){
-        ViewModel().loadData(query: "new", returnType: NewBook.self) { item in
+        ViewModel().loadData(caseName: .new, query: "", returnType: NewBook.self) { item in
             self.resultNewBook.append(item)
             self.newBooks.reloadData()
         }

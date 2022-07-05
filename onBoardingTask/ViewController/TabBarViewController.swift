@@ -17,7 +17,8 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         
         let newNavi = UINavigationController(rootViewController: newTab)
         let searchNavi = UINavigationController(rootViewController: searchTab)
-        
+       
+
         newNavi.navigationBar.prefersLargeTitles = true
         searchNavi.navigationBar.prefersLargeTitles = true
         
@@ -35,7 +36,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     }
 
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        print("\(viewController.title)")
+
     }
     
 
