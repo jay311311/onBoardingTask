@@ -1,28 +1,24 @@
 import Foundation
-
+import UIKit
 
 
 class ViewModel{
     //urlSession
- 
     func makeURL(url:String , query:String) -> URL {
-        // ** 가능하다면 , 추후 enum 으로 바꿔서 구현하기
         var components = URLComponents(string: "\(url)")!
         components.path += "\(query)"
         let url = components.url!
         return url
-
     }
-    // 추후 예외 처리
-    func loadData<T:Codable>  (caseName : Path, query:String, returnType :T.Type , completion :  @escaping (T) ->Void) {
-        print("enum 값을 보자 \(caseName.rawValue)")
-//        caseName.paths += "\(query)"
+    
+    func loadData<T:Codable>  (caseName : UrlPath, query:String = "", returnType :T.Type , completion :  @escaping (T) ->Void) {
         let url =  makeURL(url: caseName.rawValue,query: query)
-        print("링크를 봐야될것 같군 \(url)")
-        
-        
         let dataTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
-            guard err == nil else { return }
+            guard err == nil else {
+                return  DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Notification.Name("errorMessage") , object: err!.localizedDescription)
+                }
+            }
             guard let statusCode = (res as? HTTPURLResponse)?.statusCode else {return}
             let statusRange = 200..<300
             if statusRange.contains(statusCode) {
@@ -34,7 +30,7 @@ class ViewModel{
                         completion(result)
                     }
                 }catch let error {
-                    print("\(error.localizedDescription)")
+                    print("일반 error : \(error.localizedDescription)")
                 }
             }
         }
@@ -49,5 +45,13 @@ class ViewModel{
                 completion(data)
             }
         }
+    }
+    
+    func makeAlert( message :String) -> UIAlertController{
+        let alertBox = UIAlertController(title: "경고", message: "\(message)", preferredStyle: .actionSheet)
+        let action  = UIAlertAction(title: "확인", style: .destructive, handler: nil)
+        alertBox.addAction(action)
+        //self.presentView
+        return alertBox
     }
 }
