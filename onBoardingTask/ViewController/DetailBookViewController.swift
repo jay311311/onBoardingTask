@@ -168,7 +168,6 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
 
 extension DetailBookViewController: UITextViewDelegate{
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        //print("placeholder 사라지는 시점")
         textView.text = ""
         textView.textColor = .black
         return true

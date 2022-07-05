@@ -109,7 +109,6 @@ class SearchTableViewCell: UITableViewCell {
     }
     
     func setValue(_ item : DetailBook){
-      //  print("cell에서는 \(item.title)")
         title.text =  item.title
         subTitle.text =  item.subtitle
         isbn13.text = item.isbn13

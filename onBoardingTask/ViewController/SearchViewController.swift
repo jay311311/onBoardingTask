@@ -27,8 +27,6 @@ class SearchViewController: UIViewController {
         hidesBottomBarWhenPushed = false
         setView()
     }
-
-    
     
     func setView(){
         view.addSubview(saftyArea)
@@ -42,9 +40,8 @@ class SearchViewController: UIViewController {
         }
         saftyArea.addSubview(searchTable)
         searchTable.snp.makeConstraints {
-            $0.directionalHorizontalEdges.equalToSuperview()
+            $0.directionalHorizontalEdges.bottom.equalToSuperview()
             $0.top.equalTo(searchBar.snp.bottom)
-            $0.bottom.equalToSuperview()
         }
     }
     func getData(_ searchItem : String){

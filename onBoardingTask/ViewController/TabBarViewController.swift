@@ -1,6 +1,11 @@
 import UIKit
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
+//    print("내가빨라2")
+
+    let newTab =  NewBookViewController()
+    let searchTab =  SearchViewController()
+    
     override func viewDidLoad() {
         NotificationCenter.default.addObserver(self, selector: #selector(receiveErrorMessage), name: Notification.Name("errorMessage"), object: nil)
 
@@ -9,20 +14,16 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     }
     
     @objc func receiveErrorMessage(_ notification:Notification){
-        print("왜못가는거얌")
         guard let message = notification.object  else { return }
         let alert = AlertViewController().addAlertAction("\(message)")
         present(alert, animated: false, completion: nil)
     }
-    override func viewDidAppear(_ animated: Bool) {
-        print("뷰디드어피어")
-        
-    }
+
     init(){
         super.init(nibName: nil ,bundle: nil)
-        let newTab =  NewBookViewController()
-        let searchTab =  SearchViewController()
-        
+
+        print("내가빨라1")
+
         newTab.title = "New Books"
         searchTab.title = "Search"
         
@@ -39,7 +40,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         searchTab.tabBarItem = searchTabItem
         
         setViewControllers([newNavi,searchNavi], animated: true)
-        
     }
     
     required init?(coder: NSCoder) {
@@ -47,7 +47,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     }
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        
+//        print("\(viewController.title)")
     }
     
     

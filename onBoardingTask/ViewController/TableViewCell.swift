@@ -72,51 +72,52 @@ class TableViewCell: UITableViewCell {
     
     func setView(){
         contentView.addSubview(newBookList)
-        newBookList.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 300, height: 280))
-            make.center.equalToSuperview()
+        newBookList.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(20)
+            $0.directionalVerticalEdges.equalToSuperview().inset(8)
+            $0.center.equalToSuperview()
         }
         
         newBookList.addSubview(bookImg)
         bookImg.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
+            $0.directionalHorizontalEdges.equalToSuperview()
             $0.height.equalToSuperview().multipliedBy(2.0/3.0)
         }
         
         newBookList.addSubview(bookInfo)
         bookInfo.snp.makeConstraints {
             $0.height.equalToSuperview().multipliedBy(1.0/3.0)
-            $0.leading.bottom.trailing.equalToSuperview()
+            $0.directionalHorizontalEdges.bottom.equalToSuperview()
         }
         
         bookImg.addSubview(thumbnail)
-        thumbnail.snp.makeConstraints { make in
-            make.height.equalTo(190)
-            make.center.equalToSuperview()
+        thumbnail.snp.makeConstraints {
+            $0.height.equalTo(190)
+            $0.center.equalToSuperview()
         }
         
         bookInfo.addSubview(mainTitle)
-        mainTitle.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(10)
-            make.top.equalToSuperview().offset(5)
+        mainTitle.snp.makeConstraints {
+            $0.directionalHorizontalEdges.equalToSuperview().inset(10)
+            $0.top.equalToSuperview().offset(5)
         }
         
         bookInfo.addSubview(subTitle)
-        subTitle.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(mainTitle.snp.bottom).offset(3)
+        subTitle.snp.makeConstraints {
+            $0.directionalHorizontalEdges.equalToSuperview()
+            $0.top.equalTo(mainTitle.snp.bottom).offset(3)
         }
         
         bookInfo.addSubview(isbn13)
-        isbn13.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(mainTitle.snp.bottom).offset(25)
+        isbn13.snp.makeConstraints {
+            $0.directionalHorizontalEdges.equalToSuperview()
+            $0.top.equalTo(mainTitle.snp.bottom).offset(25)
         }
         
         bookInfo.addSubview(price)
-        price.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(isbn13.snp.bottom).offset(5)
+        price.snp.makeConstraints {
+            $0.directionalHorizontalEdges.equalToSuperview()
+            $0.top.equalTo(isbn13.snp.bottom).offset(5)
         }
     }
 }
