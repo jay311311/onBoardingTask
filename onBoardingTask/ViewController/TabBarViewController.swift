@@ -1,11 +1,16 @@
 import UIKit
-
+import Then
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 //    print("내가빨라2")
-
-    let newTab =  NewBookViewController()
-    let searchTab =  SearchViewController()
-    
+    let newTab =  NewBookViewController().then{
+        $0.title = "New Books"
+        
+    }
+  
+    let searchTab =  SearchViewController().then{
+        $0.title = "Search"
+    }
+        
     override func viewDidLoad() {
         NotificationCenter.default.addObserver(self, selector: #selector(receiveErrorMessage), name: Notification.Name("errorMessage"), object: nil)
 
@@ -21,8 +26,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
     init(){
         super.init(nibName: nil ,bundle: nil)
-        newTab.title = "New Books"
-        searchTab.title = "Search"
+       
         
         let newNavi = UINavigationController(rootViewController: newTab)
         let searchNavi = UINavigationController(rootViewController: searchTab)
@@ -33,8 +37,8 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         let newTabItem =  UITabBarItem(title: "New", image: UIImage(systemName: "book"), selectedImage: UIImage(systemName: "book"))
         let searchTabItem =  UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
         
-        newTab.tabBarItem = newTabItem
-        searchTab.tabBarItem = searchTabItem
+        self.newTab.tabBarItem = newTabItem
+        self.searchTab.tabBarItem = searchTabItem
         
         setViewControllers([newNavi,searchNavi], animated: true)
     }

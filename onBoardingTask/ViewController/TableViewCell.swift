@@ -1,7 +1,7 @@
 import UIKit
+import Then
 
 class TableViewCell: UITableViewCell {
-    
     let viewModel =  ViewModel()
     override init(style :UITableViewCell.CellStyle , reuseIdentifier : String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -13,52 +13,35 @@ class TableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var newBookList: UIView  =  {
-        let view = UIView()
-        view.layer.cornerRadius = 10
-        view.clipsToBounds = true
-        return view
-    }()
-    lazy var bookImg:UIView =  {
-        let view = UIView()
-        view.backgroundColor = .systemGray5
-        return view
-    }()
-    lazy var bookInfo:UIView =  {
-        let view = UIView()
-        view.backgroundColor = .systemGray3
-        return view
-    }()
-    lazy var thumbnail: UIImageView =  {
-        let imageView =  UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
-    lazy var mainTitle: UILabel = {
-        let label =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        label.textAlignment = .center
-        return label
-    }()
-    lazy var subTitle:UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        label.textAlignment = .center
-        return label
-    }()
-    
-    lazy var isbn13 : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.textAlignment = .center
-        return label
-    }()
-    lazy var price: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        label.textAlignment = .center
-        return label
-    }()
+    lazy var newBookList = UIView().then {
+        $0.layer.cornerRadius = 10
+        $0.clipsToBounds = true
+    }
+    lazy var bookImg = UIView().then {
+        $0.backgroundColor = .systemGray5
+    }
+    lazy var bookInfo = UIView().then {
+        $0.backgroundColor = .systemGray3
+    }
+    lazy var thumbnail = UIImageView().then  {
+        $0.contentMode = .scaleAspectFit
+    }
+    lazy var mainTitle = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        $0.textAlignment = .center
+    }
+    lazy var subTitle = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        $0.textAlignment = .center
+    }
+    lazy var isbn13 = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        $0.textAlignment = .center
+    }
+    lazy var price = UILabel().then{
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        $0.textAlignment = .center
+    }
     
     func setUpValue( _ book :Books){
         mainTitle.text = book.title

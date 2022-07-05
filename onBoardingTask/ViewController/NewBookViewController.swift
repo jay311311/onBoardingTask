@@ -1,19 +1,15 @@
 import UIKit
 import SnapKit
+import Then
 
 class NewBookViewController: UIViewController {
     
     var resultNewBook: [NewBook] =  []
-    lazy var safetyArea : UIView = {
-        let uiView = UIView()
-        return uiView
-    }()
-    lazy var newBooks: UITableView = {
-        let tableView = UITableView()
-        tableView.register(TableViewCell.self, forCellReuseIdentifier: "newBook")
-        tableView.separatorStyle = .none
-        return tableView
-    }()
+    lazy var safetyArea  =  UIView()
+    lazy var newBooks = UITableView().then{
+        $0.register(TableViewCell.self, forCellReuseIdentifier: "newBook")
+        $0.separatorStyle = .none
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,9 +59,12 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailVC = DetailBookViewController()
-        detailVC.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(detailVC, animated: true)
-        detailVC.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
+        let detailVC = DetailBookViewController().then {
+            $0.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController($0, animated: true)
+            $0.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
+        }
+
+        
     }
 }

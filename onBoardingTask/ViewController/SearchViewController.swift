@@ -1,18 +1,15 @@
 import UIKit
+import Then
 
 class SearchViewController: UIViewController {
     lazy var saftyArea  = UIView()
-    lazy var searchBar: UISearchBar = {
-        let searchBar  =  UISearchBar()
-        searchBar.searchBarStyle = .minimal
-        searchBar.placeholder = "검색어를 입력해보세요"
-        return searchBar
-    }()
-    lazy var searchTable : UITableView = {
-        let tableView  =  UITableView()
-        tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: "searchCell")
-        return tableView
-    }()
+    lazy var searchBar =  UISearchBar().then {
+        $0.searchBarStyle = .minimal
+        $0.placeholder = "검색어를 입력해보세요"
+    }
+    lazy var searchTable  = UITableView().then {
+        $0.register(SearchTableViewCell.self, forCellReuseIdentifier: "searchCell")
+    }
     
     lazy var viewModel =  ViewModel()
     lazy var searchData:[SearchBook] = []
@@ -24,7 +21,7 @@ class SearchViewController: UIViewController {
         searchTable.delegate = self
         searchTable.dataSource = self
         searchBar.delegate = self
-        hidesBottomBarWhenPushed = false
+//        hidesBottomBarWhenPushed = false
         setView()
     }
     
@@ -95,10 +92,11 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        lazy var detailVC = DetailBookViewController()
-        detailVC.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(detailVC, animated: true)
-        detailVC.sendData(response: (searchData.first?.books[indexPath.item].isbn13)!)
+        let detailVC = DetailBookViewController().then {
+            $0.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController($0, animated: true)
+            $0.sendData(response: (searchData.first?.books[indexPath.item].isbn13)!)
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

@@ -1,53 +1,30 @@
 import UIKit
+import Then
 
 class SearchTableViewCell: UITableViewCell {
     let viewModel = ViewModel()
-    lazy var searchList :UIView  = {
-        let view  =  UIView()
-        return view
-    }()
-    lazy var bookInfo: UIView = {
-        let view =  UIView()
-        return view
-    }()
-    lazy var bookImg:UIView = {
-        let view =  UIView()
-        return view
-    }()
-    lazy var thumbnail: UIImageView = {
-        let image =  UIImageView()
-        image.contentMode = .scaleAspectFit
-        return image
-    }()
-   lazy  var title : UILabel = {
-        let label  =  UILabel()
-         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        return label
-    }()
-    lazy var subTitle : UILabel = {
-        let label  =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-
-        return label
-    }()
-    lazy var isbn13 : UILabel = {
-        let label  =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-
-        return label
-    }()
-    lazy var price : UILabel = {
-        let label  =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-
-        return label
-    }()
-    lazy var url : UILabel = {
-        let label  =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        label.textColor = .tintColor
-        return label
-    }()
+    lazy var searchList = UIView()
+    lazy var bookInfo = UIView()
+    lazy var bookImg = UIView()
+    lazy var thumbnail = UIImageView().then{
+        $0.contentMode = .scaleAspectFit
+    }
+    lazy  var title = UILabel().then{
+        $0.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+    }
+    lazy var subTitle = UILabel().then{
+        $0.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+    }
+    lazy var isbn13  = UILabel().then{
+        $0.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+    }
+    lazy var price = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+    }
+    lazy var url = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        $0.textColor = .tintColor
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

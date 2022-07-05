@@ -1,68 +1,45 @@
 import UIKit
 import SnapKit
+import Then
 
 class DetailBookViewController: UIViewController, sendDataDelegate {
     lazy var sendingIsbn : String = ""
+    
     let viewModel =  ViewModel()
-    lazy var safetyArea:UIView = {
-        let view  =  UIView()
-        return view
-    }()
-    lazy var bookImg : UIView =  {
-        let view  =  UIView()
-        view.backgroundColor = .systemGray5
-        return view
-    }()
-    lazy var bookInfo :UIView = {
-        let view  =  UIView()
-        return view
-    }()
-    lazy var thumbnail:UIImageView =  {
-        let imageView =  UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
-    lazy var mainTitle:UILabel = {
-        let label =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        return label
-    }()
-    lazy var subTitle:UILabel = {
-        let label =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        return label
-    }()
-    lazy var isbn13:UILabel = {
-        let label =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        return label
-    }()
-    lazy var price:UILabel = {
-        let label =  UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        return label
-    }()
-    lazy var url:UILabel = {
-        let label =  UILabel()
-        label.textColor = .tintColor
-        return label
-    }()
-    lazy var line : UIView = {
-        let view  =  UIView()
-        view.backgroundColor = .systemGray3
-        return view
-    }()
-    lazy var textView:UITextView = {
-        let textView = UITextView()
-        let borderColor:UIColor = .systemGray3
-        textView.backgroundColor = .white
-        textView.text = "메모를 입력해주세요"
-        textView.textColor = .systemGray3
-        textView.layer.borderWidth = 1
-        textView.layer.borderColor = UIColor.lightGray.cgColor
-        textView.layer.cornerRadius = 5.0
-        return textView
-    }()
+    lazy var safetyArea = UIView()
+    lazy var bookImg = UIView().then {
+        $0.backgroundColor = .systemGray5
+    }
+    lazy var bookInfo = UIView()
+    lazy var thumbnail = UIImageView().then{
+        $0.contentMode = .scaleAspectFit
+    }
+    lazy var mainTitle = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
+    lazy var subTitle = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+    }
+    lazy var isbn13 = UILabel().then{
+        $0.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+    }
+    lazy var price = UILabel().then{
+        $0.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+    }
+    lazy var url = UILabel().then {
+        $0.textColor = .tintColor
+    }
+    lazy var line = UIView().then {
+        $0.backgroundColor = .systemGray3
+    }
+    lazy var textView = UITextView().then{
+        $0.backgroundColor = .white
+        $0.text = "메모를 입력해주세요"
+        $0.textColor = .systemGray3
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.lightGray.cgColor
+        $0.layer.cornerRadius = 5.0
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,14 +80,12 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         
         safetyArea.addSubview(bookImg)
         bookImg.snp.makeConstraints {
-            $0.directionalHorizontalEdges.equalToSuperview()
-            $0.top.equalToSuperview()
+            $0.directionalHorizontalEdges.top.equalToSuperview()
             $0.height.equalToSuperview().multipliedBy(1.25/3.0)
         }
         bookImg.addSubview(thumbnail)
         thumbnail.snp.makeConstraints {
-            $0.height.equalToSuperview()
-            $0.center.equalToSuperview()
+            $0.center.height.equalToSuperview()
         }
         
         safetyArea.addSubview(bookInfo)
@@ -160,8 +135,7 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         bookInfo.addSubview(textView)
         textView.snp.makeConstraints {
             $0.top.equalTo(line.snp.bottom).offset(20)
-            $0.directionalHorizontalEdges.equalToSuperview()
-            $0.bottom.equalToSuperview()
+            $0.directionalHorizontalEdges.bottom.equalToSuperview()
         }
     }
 }
