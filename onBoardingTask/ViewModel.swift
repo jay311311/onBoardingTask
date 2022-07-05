@@ -15,6 +15,7 @@ class ViewModel{
         let url =  makeURL(url: caseName.rawValue,query: query)
         let dataTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
             guard err == nil else {
+                print("에러가 뭐라고 하냐면\(err?.localizedDescription)")
                 return  DispatchQueue.main.async {
                     NotificationCenter.default.post(name: Notification.Name("errorMessage") , object: err!.localizedDescription)
                 }
@@ -27,6 +28,7 @@ class ViewModel{
                     let decoder  =  JSONDecoder()
                     let result = try decoder.decode(returnType, from: data)
                     DispatchQueue.main.async {
+//                        print("결과가 뭐라고 하냐면\(result)")
                         completion(result)
                     }
                 }catch let error {

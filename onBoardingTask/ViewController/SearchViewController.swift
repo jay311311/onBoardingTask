@@ -46,6 +46,9 @@ class SearchViewController: UIViewController {
     }
     func getData(_ searchItem : String){
         viewModel.loadData(caseName : .search ,query: "\(searchItem)", returnType: SearchBook.self) { item in
+            if item.books.count == 0 {
+                NotificationCenter.default.post(name: Notification.Name("errorMessage"), object: "검색결과가 없습니다.\n 다시 검색하세요")
+            }
             print("갯수는 \(item.books.count)")
             self.searchData.append(item)
             self.searchTable.reloadData()

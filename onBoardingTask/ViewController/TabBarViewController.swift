@@ -21,9 +21,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
     init(){
         super.init(nibName: nil ,bundle: nil)
-
-        print("내가빨라1")
-
         newTab.title = "New Books"
         searchTab.title = "Search"
         
