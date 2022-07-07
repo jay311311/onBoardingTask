@@ -90,7 +90,7 @@ class SearchTableViewCell: UITableViewCell {
         title.text =  item.title
         subTitle.text =  item.subtitle
         isbn13.text = item.isbn13
-        price.text = item.price
+        price.text = "\(item.price.calculateToDaller()) 원"
         url.text =  item.url
         viewModel.showThumbnail(item.image){ data in
             self.thumbnail.image =  UIImage(data: data)

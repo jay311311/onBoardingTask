@@ -32,7 +32,7 @@ class NewBookViewController: UIViewController {
         view.addSubview(safetyArea)
         safetyArea.addSubview(newBooks)
         safetyArea.snp.makeConstraints {
-            $0.directionalEdges.equalTo(view.safeAreaLayoutGuide)
+            $0.directionalEdges.equalToSuperview()
         }
         
         newBooks.snp.makeConstraints {

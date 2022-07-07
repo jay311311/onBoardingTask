@@ -64,7 +64,7 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     func setUpValue( _ book :DetailBook){
         mainTitle.text = book.title
         subTitle.text = book.subtitle
-        price.text = book.price
+        price.text = "\(book.price.calculateToDaller()) 원"
         isbn13.text = book.isbn13
         url.text = book.url
         viewModel.showThumbnail(book.image) { data in
