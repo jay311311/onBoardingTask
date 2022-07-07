@@ -4,8 +4,8 @@ import Then
 
 class DetailBookViewController: UIViewController, sendDataDelegate {
     var sendingIsbn : String = ""
-    
-    let viewModel =  ViewModel()
+    lazy var viewModel =  ViewModel()
+    lazy var netwroking = NetworkService.shared
     lazy var safetyArea = UIView()
     lazy var bookImg = UIView().then {
         $0.backgroundColor = .systemGray5
@@ -44,8 +44,8 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
-        self.title = "Detail Book"
+        view.backgroundColor = .white
+        title = "Detail Book"
         getData()
         setView()
     }
@@ -56,7 +56,7 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     
     func getData(){
         lazy var query:String = "\(sendingIsbn)"
-        ViewModel().loadData(caseName : .detail ,query: "\(query)", returnType: DetailBook.self) { item in
+        netwroking.loadData(caseName : .detail ,query: "\(query)", returnType: DetailBook.self) { item in
             self.setUpValue(item)
         }
     }

@@ -3,7 +3,7 @@ import SnapKit
 import Then
 
 class NewBookViewController: UIViewController {
-    lazy var viewModel = ViewModel()
+    lazy var netwroking = NetworkService.shared
     lazy var resultNewBook: [NewBook] =  []
     lazy var safetyArea  =  UIView()
     lazy var newBooks = UITableView().then{
@@ -15,13 +15,13 @@ class NewBookViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
+        view.backgroundColor = .white
         getData()
         setView()
     }
     
     func getData(){
-        viewModel.loadData(caseName: .new, returnType: NewBook.self) { item in
+        netwroking.loadData(caseName: .new, returnType: NewBook.self) { item in
             self.resultNewBook.append(item)
             self.newBooks.reloadData()
         }

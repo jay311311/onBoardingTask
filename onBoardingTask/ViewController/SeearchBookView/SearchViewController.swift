@@ -22,15 +22,15 @@ class SearchViewController: UIViewController{
         $0.textColor = .systemGray2
     }
     
-    lazy var viewModel =  ViewModel()
-    var searchData:[SearchBook] = []
+    lazy var netwroking = NetworkService.shared
+    lazy var searchData:[SearchBook] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.searchController = searchController
-        self.navigationItem.title = "Search"
-        self.navigationItem.hidesSearchBarWhenScrolling = false
-        self.view.backgroundColor = .white
+        navigationItem.searchController = searchController
+        navigationItem.title = "Search"
+        navigationItem.hidesSearchBarWhenScrolling = false
+        view.backgroundColor = .white
         setView()
     }
     
@@ -56,7 +56,7 @@ class SearchViewController: UIViewController{
         }
     }
     func getData(_ searchItem : String){
-        viewModel.loadData(caseName : .search ,query: "\(searchItem)", returnType: SearchBook.self) { item in
+        netwroking.loadData(caseName : .search ,query: "\(searchItem)", returnType: SearchBook.self) { item in
             print("나오니 \(item)")
             self.searchData = []
             if item.books.count == 0 {
@@ -83,13 +83,11 @@ extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  
     func updateSearchResults(for searchController: UISearchController) {
         guard let item =   searchController.searchBar.text else { return  }
         if item == "" {
-            print("비워야함")
             searchData = []
             DispatchQueue.main.async {
                 self.searchTable.reloadData()
             }
         }else{
-            
             getData(item)
         }
     }
@@ -101,22 +99,18 @@ extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  
 }
 
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchData.first?.books.count  ?? 0
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell  = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as? SearchTableViewCell else { return UITableViewCell() }
         guard let item = searchData.first?.books else { return UITableViewCell() }
         cell.setValue(item[indexPath.item])
         return cell
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DetailBookViewController().then {
             $0.hidesBottomBarWhenPushed = true
@@ -126,5 +120,3 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
-
-//class SearchTableBgView : uiTableview

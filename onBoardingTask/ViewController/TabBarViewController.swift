@@ -3,12 +3,21 @@ import Then
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     lazy var newTab =  NewBookViewController().then{
         $0.title = "New Books"
+        $0.tabBarItem = newTabItem
     }
-  
     lazy var searchTab =  SearchViewController().then{
         $0.title = "Search"
+        $0.tabBarItem = searchTabItem
     }
-        
+    lazy var newNavi = UINavigationController(rootViewController: newTab).then {
+        $0.navigationBar.prefersLargeTitles = true
+    }
+    lazy var searchNavi = UINavigationController(rootViewController: searchTab).then {
+        $0.navigationBar.prefersLargeTitles = true
+    }
+    lazy var newTabItem =  UITabBarItem(title: "New", image: UIImage(systemName: "book"), selectedImage: UIImage(systemName: "book"))
+    lazy var searchTabItem =  UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
+    
     override func viewDidLoad() {
         NotificationCenter.default.addObserver(self, selector: #selector(receiveErrorMessage), name: Notification.Name("errorMessage"), object: nil)
         super.viewDidLoad()
@@ -23,18 +32,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
     init(){
         super.init(nibName: nil ,bundle: nil)
-        let newNavi = UINavigationController(rootViewController: newTab)
-        let searchNavi = UINavigationController(rootViewController: searchTab)
-        
-        newNavi.navigationBar.prefersLargeTitles = true
-        searchNavi.navigationBar.prefersLargeTitles = true
-        
-        let newTabItem =  UITabBarItem(title: "New", image: UIImage(systemName: "book"), selectedImage: UIImage(systemName: "book"))
-        let searchTabItem =  UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
-        
-        self.newTab.tabBarItem = newTabItem
-        self.searchTab.tabBarItem = searchTabItem
-        
         setViewControllers([newNavi,searchNavi], animated: true)
     }
     
