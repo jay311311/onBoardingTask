@@ -75,6 +75,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C3CDFE5228752B4300F7ACA6 /* SeearchBookView */ = {
+			isa = PBXGroup;
+			children = (
+				C391CC18286C22C000A21DD8 /* SearchViewController.swift */,
+				C347924E2872D2A300DC1BD9 /* SearchTableViewCell.swift */,
+			);
+			path = SeearchBookView;
+			sourceTree = "<group>";
+		};
+		C3CDFE532875493B00F7ACA6 /* NewBookView */ = {
+			isa = PBXGroup;
+			children = (
+				C3EB8339286A825700D2A4BB /* NewBookViewController.swift */,
+				C38BB159286EAD6300CFE959 /* TableViewCell.swift */,
+			);
+			path = NewBookView;
+			sourceTree = "<group>";
+		};
 		C3EB8329286A825700D2A4BB = {
 			isa = PBXGroup;
 			children = (
@@ -97,9 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				C3EB8335286A825700D2A4BB /* AppDelegate.swift */,
-				C3EB8349286A976700D2A4BB /* Model.swift */,
 				C3EB8337286A825700D2A4BB /* SceneDelegate.swift */,
-				C3ED992D286D656E00EC36D6 /* ViewModel.swift */,
 				C3ED992C286D653F00EC36D6 /* ViewController */,
 				C3EB833B286A825700D2A4BB /* Main.storyboard */,
 				C3EB833E286A825800D2A4BB /* Assets.xcassets */,
@@ -112,13 +128,13 @@
 		C3ED992C286D653F00EC36D6 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				C3EB8349286A976700D2A4BB /* Model.swift */,
+				C3ED992D286D656E00EC36D6 /* ViewModel.swift */,
 				C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */,
-				C3EB8339286A825700D2A4BB /* NewBookViewController.swift */,
-				C347924E2872D2A300DC1BD9 /* SearchTableViewCell.swift */,
 				C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */,
-				C38BB159286EAD6300CFE959 /* TableViewCell.swift */,
-				C391CC18286C22C000A21DD8 /* SearchViewController.swift */,
 				C3A84DC6287414440019DEE1 /* AlertViewController.swift */,
+				C3CDFE532875493B00F7ACA6 /* NewBookView */,
+				C3CDFE5228752B4300F7ACA6 /* SeearchBookView */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";

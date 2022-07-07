@@ -1,19 +1,16 @@
 import UIKit
 import Then
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
-//    print("내가빨라2")
-    let newTab =  NewBookViewController().then{
+    lazy var newTab =  NewBookViewController().then{
         $0.title = "New Books"
-        
     }
   
-    let searchTab =  SearchViewController().then{
+    lazy var searchTab =  SearchViewController().then{
         $0.title = "Search"
     }
         
     override func viewDidLoad() {
         NotificationCenter.default.addObserver(self, selector: #selector(receiveErrorMessage), name: Notification.Name("errorMessage"), object: nil)
-
         super.viewDidLoad()
         self.delegate = self
     }
@@ -26,8 +23,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
     init(){
         super.init(nibName: nil ,bundle: nil)
-       
-        
         let newNavi = UINavigationController(rootViewController: newTab)
         let searchNavi = UINavigationController(rootViewController: searchTab)
         

@@ -2,7 +2,7 @@ import UIKit
 import Then
 
 class SearchTableViewCell: UITableViewCell {
-    let viewModel = ViewModel()
+    lazy var viewModel = ViewModel()
     lazy var searchList = UIView()
     lazy var bookInfo = UIView()
     lazy var bookImg = UIView()
@@ -29,6 +29,7 @@ class SearchTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setView()
+        accessoryType = .disclosureIndicator
     }
     
     required init?(coder: NSCoder) {

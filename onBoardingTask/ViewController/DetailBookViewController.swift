@@ -3,7 +3,7 @@ import SnapKit
 import Then
 
 class DetailBookViewController: UIViewController, sendDataDelegate {
-    lazy var sendingIsbn : String = ""
+    var sendingIsbn : String = ""
     
     let viewModel =  ViewModel()
     lazy var safetyArea = UIView()
@@ -39,11 +39,11 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.lightGray.cgColor
         $0.layer.cornerRadius = 5.0
+        $0.delegate = self
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textView.delegate = self
         self.view.backgroundColor = .white
         self.title = "Detail Book"
         getData()

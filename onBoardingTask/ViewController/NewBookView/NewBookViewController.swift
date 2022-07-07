@@ -3,12 +3,14 @@ import SnapKit
 import Then
 
 class NewBookViewController: UIViewController {
-    
-    var resultNewBook: [NewBook] =  []
+    lazy var viewModel = ViewModel()
+    lazy var resultNewBook: [NewBook] =  []
     lazy var safetyArea  =  UIView()
     lazy var newBooks = UITableView().then{
         $0.register(TableViewCell.self, forCellReuseIdentifier: "newBook")
         $0.separatorStyle = .none
+        $0.dataSource = self
+        $0.delegate = self
     }
     
     override func viewDidLoad() {
@@ -16,12 +18,10 @@ class NewBookViewController: UIViewController {
         self.view.backgroundColor = .white
         getData()
         setView()
-        newBooks.dataSource = self
-        newBooks.delegate = self
     }
     
     func getData(){
-        ViewModel().loadData(caseName: .new, returnType: NewBook.self) { item in
+        viewModel.loadData(caseName: .new, returnType: NewBook.self) { item in
             self.resultNewBook.append(item)
             self.newBooks.reloadData()
         }
@@ -64,7 +64,5 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
             self.navigationController?.pushViewController($0, animated: true)
             $0.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
         }
-
-        
     }
 }

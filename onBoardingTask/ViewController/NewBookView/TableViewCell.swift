@@ -2,7 +2,8 @@ import UIKit
 import Then
 
 class TableViewCell: UITableViewCell {
-    let viewModel =  ViewModel()
+    lazy var viewModel =  ViewModel()
+    
     override init(style :UITableViewCell.CellStyle , reuseIdentifier : String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -49,10 +50,13 @@ class TableViewCell: UITableViewCell {
         price.text = book.price
         isbn13.text = book.isbn13
         viewModel.showThumbnail(book.image) { data in
-            self.thumbnail.image = UIImage(data: data)
+            DispatchQueue.main.async {
+                self.thumbnail.image = UIImage(data: data)
+            }
         }
     }
     
+    // MARK: - setupLayout
     func setView(){
         contentView.addSubview(newBookList)
         newBookList.snp.makeConstraints {
@@ -60,7 +64,6 @@ class TableViewCell: UITableViewCell {
             $0.directionalVerticalEdges.equalToSuperview().inset(8)
             $0.center.equalToSuperview()
         }
-        
         newBookList.addSubview(bookImg)
         bookImg.snp.makeConstraints {
             $0.directionalHorizontalEdges.equalToSuperview()
