@@ -1,6 +1,11 @@
 import UIKit
 import Then
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
+//    lazy var newTab =  TestSafeAreaViewController().then{
+//        $0.title = "test"
+//        $0.tabBarItem = newTabItem
+//    }
+//
     lazy var newTab =  NewBookViewController().then{
         $0.title = "New Books"
         $0.tabBarItem = newTabItem

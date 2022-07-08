@@ -3,7 +3,6 @@ import Then
 
 class SearchTableViewCell: UITableViewCell {
     lazy var viewModel = ViewModel()
-    lazy var searchList = UIView()
     lazy var bookInfo = UIView()
     lazy var bookImg = UIView()
     lazy var thumbnail = UIImageView().then{

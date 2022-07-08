@@ -55,8 +55,8 @@ class TableViewCell: UITableViewCell {
             }
         }
     }
-    
-    // MARK: - setupLayout
+//
+//     MARK: - setupLayout
     func setView(){
         contentView.addSubview(newBookList)
         newBookList.snp.makeConstraints {
@@ -66,8 +66,9 @@ class TableViewCell: UITableViewCell {
         }
         newBookList.addSubview(bookImg)
         bookImg.snp.makeConstraints {
-            $0.directionalHorizontalEdges.equalToSuperview()
+            $0.directionalHorizontalEdges.top.equalToSuperview()
             $0.height.equalToSuperview().multipliedBy(2.0/3.0)
+//            $0.bottom.equalTo(bookInfo.snp.top)
         }
         
         newBookList.addSubview(bookInfo)

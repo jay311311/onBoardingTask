@@ -11,6 +11,8 @@ class NewBookViewController: UIViewController {
         $0.separatorStyle = .none
         $0.dataSource = self
         $0.delegate = self
+        $0.refreshControl = UIRefreshControl()
+        $0.refreshControl?.addTarget(self, action: #selector(updateTable), for: .valueChanged)
     }
     
     override func viewDidLoad() {
@@ -30,13 +32,21 @@ class NewBookViewController: UIViewController {
     // 뷰의 구성
     func setView(){
         view.addSubview(safetyArea)
-        safetyArea.addSubview(newBooks)
         safetyArea.snp.makeConstraints {
-            $0.directionalEdges.equalToSuperview()
+            $0.directionalEdges.equalTo(view.safeAreaLayoutGuide)
         }
-        
+        safetyArea.addSubview(newBooks)
         newBooks.snp.makeConstraints {
             $0.directionalEdges.equalToSuperview()
+        }
+    }
+  
+    @objc func updateTable(refresh : UIRefreshControl){
+        let refreshControl =  self.newBooks.refreshControl
+        getData()
+        DispatchQueue.main.async {
+            refreshControl?.endRefreshing()
+           
         }
     }
 }
@@ -64,5 +74,9 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
             self.navigationController?.pushViewController($0, animated: true)
             $0.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
         }
+    }
+      func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        print(indexPath)
+        return nil
     }
 }
