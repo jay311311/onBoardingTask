@@ -20,12 +20,16 @@ class NewBookViewController: UIViewController {
         view.backgroundColor = .white
         getData()
         setView()
+       
     }
     
     func getData(){
-        netwroking.loadData(caseName: .new, returnType: NewBook.self) { item in
-            self.resultNewBook.append(item)
-            self.newBooks.reloadData()
+        netwroking.loadData(caseName: .new, returnType: NewBook.self) { [weak self] item in
+            
+            self?.resultNewBook.append(item)
+            DispatchQueue.main.async {
+                self?.newBooks.reloadData()
+            }
         }
     }
     
@@ -46,13 +50,21 @@ class NewBookViewController: UIViewController {
         getData()
         DispatchQueue.main.async {
             refreshControl?.endRefreshing()
-           
+        }
+    }
+    
+}
+extension NewBookViewController : UIScrollViewDelegate{
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        print("스크롤 y축 top : \(scrollView.contentOffset.y) && 전체 스크롤뷰 높이: \(scrollView.contentSize.height) && 보이는 프레임 높이: \(scrollView.frame.height)" )
+        if  (scrollView.contentOffset.y  >= scrollView.contentSize.height - scrollView.frame.height ) {
+            print("나는 도달스")
         }
     }
 }
 
-
 extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultNewBook.first?.books.count ?? 0
     }
@@ -75,8 +87,6 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
             $0.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
         }
     }
-      func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        print(indexPath)
-        return nil
-    }
+      
+    
 }

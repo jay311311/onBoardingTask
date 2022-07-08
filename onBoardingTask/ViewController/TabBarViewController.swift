@@ -6,6 +6,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 //        $0.tabBarItem = newTabItem
 //    }
 //
+    
     lazy var newTab =  NewBookViewController().then{
         $0.title = "New Books"
         $0.tabBarItem = newTabItem

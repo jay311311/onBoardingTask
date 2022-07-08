@@ -49,6 +49,16 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         getData()
         setView()
     }
+    
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        guard  let inputbox  =  textView.text, let isbn13 = isbn13.text   else { return }
+        print("\(inputbox)를 저장했다")
+        if inputbox != "메모를 입력해주세요"{
+            UserDefaults.standard.setValue(inputbox, forKey: isbn13)
+        }
+    }
     // delegate 패턴 데이터 전달
     func sendData(response: String) {
         sendingIsbn = response
@@ -69,6 +79,16 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         url.text = book.url
         viewModel.showThumbnail(book.image) { data in
             self.thumbnail.image = UIImage(data: data)
+        }
+        saveInputText(book.isbn13)
+        
+    }
+    
+    func saveInputText(_ key :String){
+        guard let userDefault  = UserDefaults.standard.string(forKey: key)  else { return }
+        if  userDefault != nil || userDefault == "메모를 입력해주세요" {
+            textView.text = userDefault
+            textView.textColor = .black
         }
     }
     
@@ -145,5 +165,12 @@ extension DetailBookViewController: UITextViewDelegate{
         textView.text = ""
         textView.textColor = .black
         return true
+    }
+}
+
+
+extension DetailBookViewController: UINavigationControllerDelegate{
+    func navigationController(_ navigationController: UINavigationController, willshow viewController: UIViewController, animated: Bool) {
+        print("\(navigationController)  && \(viewController)")
     }
 }
