@@ -1,7 +1,12 @@
 import UIKit
+import SnapKit
 import Then
 
 class SearchViewController: UIViewController{
+    lazy var page = 1
+    lazy var netwroking = NetworkService.shared
+    lazy var searchData:[SearchBook] = []
+    
     lazy var saftyArea  = UIView()
     var historyText = UserDefaults.standard.string(forKey: "history")
     lazy var searchController = UISearchController(searchResultsController: nil).then {
@@ -17,7 +22,6 @@ class SearchViewController: UIViewController{
         $0.delegate = self
         $0.dataSource = self
         $0.backgroundView =  self.bgLabel
-        $0.separatorStyle = .singleLine
     }
     lazy var searchTableBg = UIView()
     lazy var bgLabel = UILabel().then {
@@ -25,13 +29,12 @@ class SearchViewController: UIViewController{
         $0.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         $0.textColor = .systemGray2
     }
-    lazy var netwroking = NetworkService.shared
-    lazy var searchData:[SearchBook] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.searchController = searchController
-        navigationItem.title = "Search"
+        title = "Search"
+        //        navigationItem.title = "Search"
         navigationItem.hidesSearchBarWhenScrolling = false
         view.backgroundColor = .white
         setView()
@@ -42,12 +45,13 @@ class SearchViewController: UIViewController{
             bgLabel.text = ""
         }
     }
-
+    
     func setView(){
         view.addSubview(saftyArea)
         saftyArea.snp.makeConstraints {
             $0.directionalEdges.equalTo(view.safeAreaLayoutGuide)
         }
+        
         saftyArea.addSubview(searchTable)
         searchTable.snp.makeConstraints {
             $0.directionalHorizontalEdges.bottom.equalToSuperview()
@@ -60,12 +64,12 @@ class SearchViewController: UIViewController{
         }
     }
     func getData(_ searchItem : String){
-        netwroking.loadData(caseName : .search ,query: "\(searchItem)",page: 2, returnType: SearchBook.self) {[weak self] item in
+        netwroking.loadData(caseName : .search ,query: "\(searchItem)",page: page, returnType: SearchBook.self) {[weak self] item in
             print("나오니 \(item.books.count)")
             self?.searchData = []
             if item.books.count > 0{
-//                self?.bgLabel.text = ""
                 DispatchQueue.main.async {
+                    self?.bgLabel.text = nil
                     self?.searchData.append(item)
                     self?.searchTable.reloadData()
                 }
@@ -77,25 +81,16 @@ class SearchViewController: UIViewController{
 extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  {
     func updateSearchResults(for searchController: UISearchController) {
         guard let item =   searchController.searchBar.text else { return  }
-        
         if item.count  >= 2  {
             getData(item)
             UserDefaults.standard.setValue(item, forKey: "history")
         }else{
             searchData = []
-            self.searchTable.backgroundView = self.bgLabel
-            self.bgLabel.text = "검색결과가 없습니다"
             DispatchQueue.main.async {
+                self.searchTable.backgroundView = self.bgLabel
+                self.bgLabel.text = "검색결과가 없습니다"
                 self.searchTable.reloadData()
             }
-        }
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchData = []
-        DispatchQueue.main.async {
-            self.searchTable.reloadData()
         }
     }
 }
@@ -106,7 +101,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let item = searchData.first?.books , let searchText =   searchController.searchBar.text else { return UITableViewCell() }
-        if searchText == "" &&   historyText != nil {
+        if searchText == "",  let historyText = historyText {
             tableView.separatorStyle = .none
             if let  cell =  tableView.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as? TableViewCell{
                 cell.setUpValue(item[indexPath.item])

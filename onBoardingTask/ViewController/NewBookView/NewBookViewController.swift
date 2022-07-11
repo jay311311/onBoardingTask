@@ -3,7 +3,8 @@ import SnapKit
 import Then
 
 class NewBookViewController: UIViewController {
-    lazy var netwroking = NetworkService.shared
+    lazy var networking = NetworkService.shared
+    lazy var addingCellNum  = 1
     lazy var resultNewBook: [NewBook] =  []
     lazy var safetyArea  =  UIView()
     lazy var newBooks = UITableView().then{
@@ -17,16 +18,16 @@ class NewBookViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         getData()
         setView()
+        view.backgroundColor = .white
     }
     
     func getData(){
-        netwroking.loadData(caseName: .new, returnType: NewBook.self) { [weak self] item in
-            self?.resultNewBook.append(item)
+        networking.loadData(caseName: .new, returnType: NewBook.self) {item in
+            self.resultNewBook.append(item)
             DispatchQueue.main.async {
-                self?.newBooks.reloadData()
+                self.newBooks.reloadData()
             }
         }
     }
@@ -45,7 +46,7 @@ class NewBookViewController: UIViewController {
   
     @objc func updateTable(refresh : UIRefreshControl){
         let refreshControl =  self.newBooks.refreshControl
-        getData()
+//        getData()
         DispatchQueue.main.async {
             refreshControl?.endRefreshing()
         }
@@ -55,14 +56,20 @@ extension NewBookViewController : UIScrollViewDelegate{
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         print("스크롤 y축 top : \(scrollView.contentOffset.y) && 전체 스크롤뷰 높이: \(scrollView.contentSize.height) && 보이는 프레임 노: \(scrollView.frame.height)" )
         if  (scrollView.contentOffset.y  >= scrollView.contentSize.height - scrollView.frame.height ) {
-            print("나는 도달스")
+            if  addingCellNum < 5 {
+                addingCellNum += 1
+                newBooks.reloadData()
+            }
         }
     }
 }
 
 extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return resultNewBook.first?.books.count ?? 0
+        guard  let cellNum  = resultNewBook.first?.books.count else  { return 0 }
+        let cellCount  = (cellNum / 5) * addingCellNum
+        return  cellCount
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -71,8 +78,9 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell =  tableView.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as? TableViewCell else { return UITableViewCell() }
-        guard let result =  resultNewBook.first?.books else { return   UITableViewCell() }
-        cell.setUpValue(result[indexPath.item])
+        if let result =  resultNewBook.first?.books {
+        cell.setUpValue(result[indexPath.row])
+        }
         return cell
     }
     
@@ -83,4 +91,6 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
             $0.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
         }
     }
+      
+    
 }

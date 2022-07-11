@@ -14,6 +14,14 @@ class TableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        thumbnail.image = nil
+        mainTitle.text = ""
+        subTitle.text = ""
+        isbn13.text = ""
+        price.text = ""
+    }
     lazy var newBookList = UIView().then {
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
@@ -49,11 +57,13 @@ class TableViewCell: UITableViewCell {
         subTitle.text = book.subtitle
         price.text = "\(book.price.calculateToDaller()) 원"
         isbn13.text = book.isbn13
-        viewModel.showThumbnail(book.image) { data in
+        viewModel.showThumbnail(book.image){ data in
             DispatchQueue.main.async {
-                self.thumbnail.image = UIImage(data: data)
+                self.thumbnail.image =  UIImage(data: data)
+
             }
         }
+        
     }
 //
 //     MARK: - setupLayout

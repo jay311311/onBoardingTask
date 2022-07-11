@@ -49,9 +49,6 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         getData()
         setView()
     }
-    
-    
-    
     override func viewWillDisappear(_ animated: Bool) {
         guard  let inputbox  =  textView.text, let isbn13 = isbn13.text   else { return }
         print("\(inputbox)를 저장했다")
@@ -66,8 +63,8 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     
     func getData(){
         lazy var query:String = "\(sendingIsbn)"
-        netwroking.loadData(caseName : .detail ,query: "\(query)", returnType: DetailBook.self) { item in
-            self.setUpValue(item)
+        netwroking.loadData(caseName : .detail ,query: "\(query)", returnType: DetailBook.self) { [weak self] item in
+            self?.setUpValue(item)
         }
     }
     
@@ -86,10 +83,8 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
     
     func saveInputText(_ key :String){
         guard let userDefault  = UserDefaults.standard.string(forKey: key)  else { return }
-        if  userDefault != nil || userDefault == "메모를 입력해주세요" {
-            textView.text = userDefault
-            textView.textColor = .black
-        }
+        textView.text = userDefault
+        textView.textColor = .black
     }
     
     func setView(){
@@ -169,8 +164,8 @@ extension DetailBookViewController: UITextViewDelegate{
 }
 
 
-extension DetailBookViewController: UINavigationControllerDelegate{
-    func navigationController(_ navigationController: UINavigationController, willshow viewController: UIViewController, animated: Bool) {
-        print("\(navigationController)  && \(viewController)")
-    }
-}
+//extension DetailBookViewController: UINavigationControllerDelegate{
+//    func navigationController(_ navigationController: UINavigationController, willshow viewController: UIViewController, animated: Bool) {
+//        print("\(navigationController)  && \(viewController)")
+//    }
+//}
