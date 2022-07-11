@@ -2,16 +2,21 @@ import Foundation
 
 class NetworkService {
     static let shared = NetworkService()
+    var url: URL?
     //urlSession
-    func makeURL(url:String , query:String) -> URL {
+    func makeURL(url:String , query:String, page :Int) -> URL {
         var components = URLComponents(string: "\(url)")!
+        if page != 0 {
+            components.path += "\(query)/\(page)"
+        }else{
         components.path += "\(query)"
+        }
         let url = components.url!
         return url
     }
     
-    func loadData<T:Codable>  (caseName : UrlPath, query:String = "", returnType :T.Type , completion :  @escaping (T) ->Void) {
-        let url =  makeURL(url: caseName.rawValue,query: query)
+    func loadData<T:Codable>  (caseName : UrlPath, query:String = "",page:Int = 0, returnType :T.Type , completion :  @escaping (T) ->Void) {
+        let url =  makeURL(url: caseName.rawValue,query: query, page: page)
         let dataTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
             guard err == nil else {
                 return  DispatchQueue.main.async {

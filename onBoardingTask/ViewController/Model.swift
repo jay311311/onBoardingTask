@@ -5,7 +5,7 @@ struct NewBook:Codable {
 }
 
 struct SearchBook:Codable{
-    var books : [DetailBook]
+    var books : [Books]
 }
 
 struct Books:Codable, Hashable{
@@ -14,6 +14,7 @@ struct Books:Codable, Hashable{
     var isbn13 : String
     var price : String
     var image : String
+    var url:String
 }
 
 struct DetailBook:Codable{

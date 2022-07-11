@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 import Then
 
 class SearchTableViewCell: UITableViewCell {
@@ -29,6 +30,7 @@ class SearchTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setView()
         accessoryType = .disclosureIndicator
+       
     }
     
     required init?(coder: NSCoder) {
@@ -85,7 +87,7 @@ class SearchTableViewCell: UITableViewCell {
         }
     }
     
-    func setValue(_ item : DetailBook){
+    func setUpValue(_ item : Books){
         title.text =  item.title
         subTitle.text =  item.subtitle
         isbn13.text = item.isbn13

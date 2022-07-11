@@ -3,6 +3,7 @@ import Then
 
 class SearchViewController: UIViewController{
     lazy var saftyArea  = UIView()
+    var historyText = UserDefaults.standard.string(forKey: "history")
     lazy var searchController = UISearchController(searchResultsController: nil).then {
         $0.searchResultsUpdater = self
     }
@@ -12,16 +13,18 @@ class SearchViewController: UIViewController{
     }
     lazy var searchTable  = UITableView().then {
         $0.register(SearchTableViewCell.self, forCellReuseIdentifier: "searchCell")
+        $0.register(TableViewCell.self, forCellReuseIdentifier: "newBook")
         $0.delegate = self
         $0.dataSource = self
+        $0.backgroundView =  self.bgLabel
+        $0.separatorStyle = .singleLine
     }
     lazy var searchTableBg = UIView()
     lazy var bgLabel = UILabel().then {
-        $0.text = "검색 결과가 없습니다"
+        $0.text = ""
         $0.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         $0.textColor = .systemGray2
     }
-    
     lazy var netwroking = NetworkService.shared
     lazy var searchData:[SearchBook] = []
     
@@ -33,7 +36,13 @@ class SearchViewController: UIViewController{
         view.backgroundColor = .white
         setView()
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        if let historyText =  UserDefaults.standard.string(forKey: "history")  {
+            getData(historyText)
+            bgLabel.text = ""
+        }
+    }
+
     func setView(){
         view.addSubview(saftyArea)
         saftyArea.snp.makeConstraints {
@@ -43,37 +52,23 @@ class SearchViewController: UIViewController{
         searchTable.snp.makeConstraints {
             $0.directionalHorizontalEdges.bottom.equalToSuperview()
             $0.top.equalToSuperview()
-            //            $0.top.equalTo(searchBar.snp.bottom)
         }
-        searchTable.addSubview(searchTableBg)
-        searchTableBg.snp.makeConstraints {
-            $0.directionalEdges.equalToSuperview()
-        }
-        searchTableBg.addSubview(bgLabel)
+        
         bgLabel.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().inset(5)
+            $0.horizontalEdges.equalTo(searchTable.snp.horizontalEdges).offset(20)
+            $0.top.equalTo(searchTable.snp.top).inset(5)
         }
     }
     func getData(_ searchItem : String){
-        netwroking.loadData(caseName : .search ,query: "\(searchItem)", returnType: SearchBook.self) { item in
-            print("나오니 \(item)")
-            self.searchData = []
-            if item.books.count == 0 {
-                print("0개 나오니 \(item)")
-                self.searchTable.backgroundView = self.searchTableBg
+        netwroking.loadData(caseName : .search ,query: "\(searchItem)",page: 2, returnType: SearchBook.self) {[weak self] item in
+            print("나오니 \(item.books.count)")
+            self?.searchData = []
+            if item.books.count > 0{
+//                self?.bgLabel.text = ""
                 DispatchQueue.main.async {
-                    self.searchTable.reloadData()
+                    self?.searchData.append(item)
+                    self?.searchTable.reloadData()
                 }
-                //                NotificationCenter.default.post(name: Notification.Name("errorMessage"), object: "검색결과가 없습니다.\n 다시 검색하세요")
-                return
-            }else{
-                self.searchTable.backgroundView = nil
-                print("갯수는 \(item.books.count)")
-                self.searchData.append(item)
-            }
-            DispatchQueue.main.async {
-                self.searchTable.reloadData()
             }
         }
     }
@@ -82,19 +77,26 @@ class SearchViewController: UIViewController{
 extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  {
     func updateSearchResults(for searchController: UISearchController) {
         guard let item =   searchController.searchBar.text else { return  }
-        if item == "" {
+        
+        if item.count  >= 2  {
+            getData(item)
+            UserDefaults.standard.setValue(item, forKey: "history")
+        }else{
             searchData = []
+            self.searchTable.backgroundView = self.bgLabel
+            self.bgLabel.text = "검색결과가 없습니다"
             DispatchQueue.main.async {
                 self.searchTable.reloadData()
             }
-        }else{
-            getData(item)
         }
     }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchData = []
-        searchTable.reloadData()
+        DispatchQueue.main.async {
+            self.searchTable.reloadData()
+        }
     }
 }
 
@@ -103,13 +105,29 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         return searchData.first?.books.count  ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell  = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as? SearchTableViewCell else { return UITableViewCell() }
-        guard let item = searchData.first?.books else { return UITableViewCell() }
-        cell.setValue(item[indexPath.item])
-        return cell
+        guard let item = searchData.first?.books , let searchText =   searchController.searchBar.text else { return UITableViewCell() }
+        if searchText == "" &&   historyText != nil {
+            tableView.separatorStyle = .none
+            if let  cell =  tableView.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as? TableViewCell{
+                cell.setUpValue(item[indexPath.item])
+                return cell
+            }
+        }else{
+            tableView.separatorStyle = .singleLine
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as? SearchTableViewCell{
+                cell.setUpValue(item[indexPath.item])
+                return cell
+            }
+        }
+        return UITableViewCell()
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        guard let searchText  = searchController.searchBar.text else { return 0 }
+        if searchText == "" && historyText != nil{
+            return 300
+        }else{
+            return 150
+        }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DetailBookViewController().then {
