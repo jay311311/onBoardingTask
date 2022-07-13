@@ -2,7 +2,9 @@ import Foundation
 
 class NetworkService {
     static let shared = NetworkService()
-    var url: URL?
+    
+    private init() { }
+    
     //urlSession
     func makeURL(url:String , query:String, page :Int) -> URL {
         var components = URLComponents(string: "\(url)")!

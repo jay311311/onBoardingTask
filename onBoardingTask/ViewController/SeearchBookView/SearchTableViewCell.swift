@@ -29,8 +29,6 @@ class SearchTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setView()
-//        accessoryType = .disclosureIndicator
-       
     }
     
     required init?(coder: NSCoder) {
@@ -93,8 +91,9 @@ class SearchTableViewCell: UITableViewCell {
         isbn13.text = item.isbn13
         price.text = "\(item.price.calculateToDaller()) 원"
         url.text =  item.url
-        viewModel.showThumbnail(item.image){ data in
-            self.thumbnail.image =  UIImage(data: data)
+        viewModel.showThumbnail(item.image){ [weak self] item in
+            guard let self  =  self else { return }
+            self.thumbnail.image =  UIImage(data: item)
         }
     }
 }

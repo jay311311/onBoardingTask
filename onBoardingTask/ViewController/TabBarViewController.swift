@@ -16,8 +16,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     }
     lazy var searchNavi = UINavigationController(rootViewController: searchTab).then {
         $0.navigationBar.prefersLargeTitles = true
-    
-
     }
     lazy var newTabItem =  UITabBarItem(title: "New", image: UIImage(systemName: "book"), selectedImage: UIImage(systemName: "book"))
     lazy var searchTabItem =  UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))

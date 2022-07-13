@@ -57,16 +57,16 @@ class TableViewCell: UITableViewCell {
         subTitle.text = book.subtitle
         price.text = "\(book.price.calculateToDaller()) 원"
         isbn13.text = book.isbn13
-        viewModel.showThumbnail(book.image){ data in
+        viewModel.showThumbnail(book.image){ [weak self] item in
+            guard let self = self else { return }
             DispatchQueue.main.async {
-                self.thumbnail.image =  UIImage(data: data)
-
+                self.thumbnail.image =  UIImage(data: item)
             }
         }
         
     }
-//
-//     MARK: - setupLayout
+
+//     MARK:  setupLayout
     func setView(){
         contentView.addSubview(newBookList)
         newBookList.snp.makeConstraints {

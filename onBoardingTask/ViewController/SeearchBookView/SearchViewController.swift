@@ -2,6 +2,7 @@ import UIKit
 import SnapKit
 import Then
 
+
 class SearchViewController: UIViewController{
     lazy var page = 1
     lazy var netwroking = NetworkService.shared
@@ -66,12 +67,13 @@ class SearchViewController: UIViewController{
     func getData(_ searchItem : String){
         netwroking.loadData(caseName : .search ,query: "\(searchItem)",page: page, returnType: SearchBook.self) {[weak self] item in
             print("나오니 \(item.books.count)")
-            self?.searchData = []
+            guard let self  = self else {return}
+            self.searchData = []
             if item.books.count > 0{
+                self.searchData.append(item)
                 DispatchQueue.main.async {
-                    self?.bgLabel.text = nil
-                    self?.searchData.append(item)
-                    self?.searchTable.reloadData()
+                    self.bgLabel.text = nil
+                    self.searchTable.reloadData()
                 }
             }
         }
@@ -93,6 +95,10 @@ extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  
             }
         }
     }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+       print("취소버튼 눌렀다용")
+     }
+
 }
 
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate{

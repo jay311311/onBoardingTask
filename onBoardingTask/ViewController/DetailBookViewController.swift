@@ -76,7 +76,7 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         url.text = book.url
         viewModel.showThumbnail(book.image) { data in
             self.thumbnail.image = UIImage(data: data)
-        }
+        } // Kingfisher 라이브러리 사용해보기
         saveInputText(book.isbn13)
         
     }
