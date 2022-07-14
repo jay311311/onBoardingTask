@@ -12,7 +12,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     }
     lazy var newNavi = UINavigationController(rootViewController: newTab).then {
         $0.navigationBar.prefersLargeTitles = true
-//        $0.hidesBarsOnSwipe = true
     }
     lazy var searchNavi = UINavigationController(rootViewController: searchTab).then {
         $0.navigationBar.prefersLargeTitles = true
@@ -21,8 +20,9 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     lazy var searchTabItem =  UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
     
     override func viewDidLoad() {
-        NotificationCenter.default.addObserver(self, selector: #selector(receiveErrorMessage), name: Notification.Name("errorMessage"), object: nil)
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(receiveErrorMessage), name: Notification.Name("errorMessage"), object: nil)
+        setViewControllers([newNavi,searchNavi], animated: true)
         self.delegate = self
     }
     
@@ -32,15 +32,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         present(alert, animated: false, completion: nil)
     }
 
-    init(){
-        super.init(nibName: nil ,bundle: nil)
-        setViewControllers([newNavi,searchNavi], animated: true)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
 //        print("\(viewController.title)")
     }

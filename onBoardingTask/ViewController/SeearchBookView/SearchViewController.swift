@@ -2,8 +2,8 @@ import UIKit
 import SnapKit
 import Then
 
-
 class SearchViewController: UIViewController{
+    
     lazy var page = 1
     lazy var netwroking = NetworkService.shared
     lazy var searchData:[SearchBook] = []
@@ -134,7 +134,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
         DetailBookViewController().then {
             $0.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController($0, animated: true)
-            $0.sendData(response: (searchData.first?.books[indexPath.item].isbn13)!)
+//            $0.sendData(response: (searchData.first?.books[indexPath.item].isbn13)!)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }

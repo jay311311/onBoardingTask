@@ -1,11 +1,16 @@
 import UIKit
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
-class DetailBookViewController: UIViewController, sendDataDelegate {
+class DetailBookViewController: UIViewController {
     var sendingIsbn : String = ""
     lazy var viewModel =  ViewModel()
+    var disposeBag = DisposeBag()
     lazy var netwroking = NetworkService.shared
+    
+    //MARK: ViewUI
     lazy var safetyArea = UIView()
     lazy var bookImg = UIView().then {
         $0.backgroundColor = .systemGray5
@@ -46,25 +51,31 @@ class DetailBookViewController: UIViewController, sendDataDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Detail Book"
-        getData()
+        print("여긴되니? \(sendingIsbn)")
+        bindIsbn()
+        getData(sendingIsbn)
         setView()
     }
     override func viewWillDisappear(_ animated: Bool) {
         guard  let inputbox  =  textView.text, let isbn13 = isbn13.text   else { return }
-        print("\(inputbox)를 저장했다")
         if inputbox != "메모를 입력해주세요"{
+            print("\(inputbox)를 저장했다")
             UserDefaults.standard.setValue(inputbox, forKey: isbn13)
         }
     }
-    // delegate 패턴 데이터 전달
-    func sendData(response: String) {
-        sendingIsbn = response
-    }
     
-    func getData(){
-        lazy var query:String = "\(sendingIsbn)"
+    func bindIsbn(){
+        viewModel.isbnValue.subscribe (onNext : { [weak self]  item in
+            guard let self  = self else { return }
+            print("heeeeey :\(item)")
+            self.sendingIsbn =  item
+        })
+            .disposed(by: disposeBag)
+    }
+    func getData(_ query: String){
         netwroking.loadData(caseName : .detail ,query: "\(query)", returnType: DetailBook.self) { [weak self] item in
-            self?.setUpValue(item)
+            guard let self  = self else  { return }
+            self.setUpValue(item)
         }
     }
     
@@ -164,8 +175,4 @@ extension DetailBookViewController: UITextViewDelegate{
 }
 
 
-//extension DetailBookViewController: UINavigationControllerDelegate{
-//    func navigationController(_ navigationController: UINavigationController, willshow viewController: UIViewController, animated: Bool) {
-//        print("\(navigationController)  && \(viewController)")
-//    }
-//}
+

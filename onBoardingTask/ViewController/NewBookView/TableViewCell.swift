@@ -10,6 +10,8 @@ class TableViewCell: UITableViewCell {
         setView()
     }
     
+    deinit { print("NewBook Cell 이 해제 되었습니다")}
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

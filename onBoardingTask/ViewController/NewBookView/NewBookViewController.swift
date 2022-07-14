@@ -1,13 +1,22 @@
 import UIKit
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 class NewBookViewController: UIViewController {
+    var disposeBag = DisposeBag()
+    lazy var viewModel = ViewModel()
+    
+    
     lazy var networking = NetworkService.shared
     lazy var addingCellNum  = 1
     lazy var resultNewBook: [NewBook] =  []
+    
+    //MARK: View
+    
     lazy var safetyArea  =  UIView()
-    lazy var newBooks = UITableView().then{
+    lazy var newBookTable = UITableView().then{
         $0.register(TableViewCell.self, forCellReuseIdentifier: "newBook")
         $0.separatorStyle = .none
         $0.dataSource = self
@@ -16,18 +25,52 @@ class NewBookViewController: UIViewController {
         $0.refreshControl?.addTarget(self, action: #selector(updateTable), for: .valueChanged)
     }
     
+    deinit{
+        print("NewBook 풀렸습니다")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getData()
         setView()
         view.backgroundColor = .white
+        getIsbn13()
     }
     
+// - MARK: Rxswift
+    func getIsbn13(){
+        //MARK: cell 클릭시 이벤트
+        newBookTable.rx.itemSelected
+            .map{self.pickupIsbn($0.row)}
+            .subscribe(onNext: { [weak self] item in
+                guard let self = self else { return }
+                print("cell_ tap_subscribe : \(item)")
+                self.presentToDetail(item)
+            })
+            .disposed(by: disposeBag)
+    }
+    // push to DetailView
+    func presentToDetail(_ item : String){
+        let detailVC = DetailBookViewController().then {
+            $0.viewModel.isbnValue.onNext(item)
+            $0.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController($0, animated: true)
+        }
+    }
+    
+    // pickup the Isbn13
+    func pickupIsbn(_ index : Int ) -> String{
+        guard let bookList = resultNewBook.first?.books else { return "" }
+        return bookList[index].isbn13
+    }
+    
+    
     func getData(){
-        networking.loadData(caseName: .new, returnType: NewBook.self) {item in
+        networking.loadData(caseName: .new, returnType: NewBook.self) { [weak self] item in
+            guard let self  =  self else { return }
             self.resultNewBook.append(item)
             DispatchQueue.main.async {
-                self.newBooks.reloadData()
+                self.newBookTable.reloadData()
             }
         }
     }
@@ -38,15 +81,15 @@ class NewBookViewController: UIViewController {
         safetyArea.snp.makeConstraints {
             $0.directionalEdges.equalTo(view.safeAreaLayoutGuide)
         }
-        safetyArea.addSubview(newBooks)
-        newBooks.snp.makeConstraints {
+        safetyArea.addSubview(newBookTable)
+        newBookTable.snp.makeConstraints {
             $0.directionalEdges.equalToSuperview()
         }
     }
-  
+    
     @objc func updateTable(refresh : UIRefreshControl){
-        let refreshControl =  self.newBooks.refreshControl
-//        getData()
+        let refreshControl =  self.newBookTable.refreshControl
+        //        getData()
         DispatchQueue.main.async {
             refreshControl?.endRefreshing()
         }
@@ -58,7 +101,7 @@ extension NewBookViewController : UIScrollViewDelegate{
         if  (scrollView.contentOffset.y  >= scrollView.contentSize.height - scrollView.frame.height ) {
             if  addingCellNum < 5 {
                 addingCellNum += 1
-                newBooks.reloadData()
+                newBookTable.reloadData()
             }
         }
     }
@@ -79,18 +122,19 @@ extension NewBookViewController :  UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell =  tableView.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as? TableViewCell else { return UITableViewCell() }
         if let result =  resultNewBook.first?.books {
-        cell.setUpValue(result[indexPath.row])
+            cell.setUpValue(result[indexPath.row])
         }
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailVC = DetailBookViewController().then {
-            $0.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController($0, animated: true)
-            $0.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
-        }
-    }
-      
+    //    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    //        let detailVC = DetailBookViewController().then {
+    //            $0.hidesBottomBarWhenPushed = true
+    //            self.navigationController?.pushViewController($0, animated: true)
+    //            $0.sendData(response: (resultNewBook.first?.books[indexPath.item].isbn13)!)
+    //        }
+    //    }
+    
     
 }
+

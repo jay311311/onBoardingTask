@@ -24,6 +24,7 @@
 		C3EB8342286A825800D2A4BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3EB8340286A825800D2A4BB /* LaunchScreen.storyboard */; };
 		C3EB834A286A976700D2A4BB /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EB8349286A976700D2A4BB /* Model.swift */; };
 		C3ED992E286D656E00EC36D6 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3ED992D286D656E00EC36D6 /* ViewModel.swift */; };
+		C3FA976D287E829400E88403 /* NetworkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FA976C287E829400E88403 /* NetworkModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		C3EB8343286A825800D2A4BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3EB8349286A976700D2A4BB /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		C3ED992D286D656E00EC36D6 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		C3FA976C287E829400E88403 /* NetworkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkModel.swift; sourceTree = "<group>"; };
 		C72A32284E5B96A1E85DB3F9 /* Pods_onBoardingTask.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_onBoardingTask.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -91,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				C3C569E628767B2D000E26BA /* NetworkService.swift */,
+				C3FA976C287E829400E88403 /* NetworkModel.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 				C391CC1D286C3EED00A21DD8 /* DetailBookViewController.swift in Sources */,
 				C3A5803B287E55C3004A82EA /* String+.swift in Sources */,
 				C3EB834A286A976700D2A4BB /* Model.swift in Sources */,
+				C3FA976D287E829400E88403 /* NetworkModel.swift in Sources */,
 				C347924F2872D2A300DC1BD9 /* SearchTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

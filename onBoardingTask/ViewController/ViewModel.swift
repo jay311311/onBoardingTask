@@ -1,6 +1,8 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class ViewModel{
     // String으로 된 이미지 파일 파싱
@@ -10,4 +12,6 @@ class ViewModel{
             completion(data)
         }
     }
+    
+    var isbnValue =   BehaviorSubject<String>(value: "")
 }
