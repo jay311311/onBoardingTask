@@ -25,10 +25,7 @@ struct DetailBook:Codable{
     var image : String
     var url:String
 }
-//
-//protocol sendDataDelegate{
-//    func sendData(response: String) -> Void
-//}
+
 
 
 

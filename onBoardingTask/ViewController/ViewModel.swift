@@ -12,6 +12,5 @@ class ViewModel{
             completion(data)
         }
     }
-    
-    var isbnValue =   BehaviorSubject<String>(value: "")
+//   
 }

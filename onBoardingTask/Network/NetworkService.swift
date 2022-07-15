@@ -1,4 +1,5 @@
 import Foundation
+import RxSwift
 
 class NetworkService {
     static let shared = NetworkService()
@@ -11,42 +12,40 @@ class NetworkService {
         if page != 0 {
             components.path += "\(query)/\(page)"
         }else{
-        components.path += "\(query)"
+            components.path += "\(query)"
         }
         let url = components.url!
         return url
     }
     
-    func loadData<T:Codable>  (caseName : UrlPath, query:String = "",page:Int = 0, returnType :T.Type , completion :  @escaping (T) ->Void) {
-        let url =  makeURL(url: caseName.rawValue,query: query, page: page)
-        let dataTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
-            guard err == nil else {
-                return  DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Notification.Name("errorMessage") , object: err!.localizedDescription)
-                }
-            }
-            guard let status = (res as? HTTPURLResponse)?.statusCode else { return }
-            guard let data = data else { return }
-            let errorCode = HTTPStatus(statusCode :status)
-            if  errorCode == .ok  {
-                print("url 좀 보자: \(url)")
-                do {
-                    let decoder  =  JSONDecoder()
-                    let result = try decoder.decode(returnType, from: data)
-                    DispatchQueue.main.async {
-                        completion(result)
+    func loadData<T:Codable>(caseName : UrlPath, query:String = "",page:Int = 0, returnType :T.Type ) -> Observable<T> {
+        return  Observable.create { [weak self] observer  in
+            guard let self  = self else { return Disposables.create() }
+            let url =  self.makeURL(url: caseName.rawValue,query: query, page: page)
+            URLSession.shared.dataTask(with: url) { (data, res, err) in
+                guard  let data = data, let res = res  else { return    }
+                let status = (res as? HTTPURLResponse)?.statusCode
+                let statusCode =  HTTPStatus(statusCode: status!)
+                if statusCode == .ok {
+                    do{
+                        let decoder = JSONDecoder()
+                        print("\(statusCode.rawValue) && \(data)")
+                        let result  =  try decoder.decode(returnType, from: data)
+                        observer.onNext(result)
+                    }catch let err {
+                        observer.onError(err)
+                        observer.onCompleted()
                     }
-                }catch let error { return }
-            }else if errorCode ==  .badRequest{
-                return DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Notification.Name("errorMessage") , object: "\(errorCode.rawValue) (\(status))")
+                }else if statusCode == .badRequest, let err = err{
+                    print("\(statusCode.rawValue)")
+                    observer.onError(err)
+                }else if statusCode == .serverError, let err = err{
+                    print("\(statusCode.rawValue)")
+                    observer.onError(err)
                 }
-            }else if errorCode ==  .serverError{
-                return DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Notification.Name("errorMessage") , object: "\(errorCode.rawValue) (\(status))")
-                }
-            }
+            }.resume()
+            return Disposables.create()
         }
-        dataTask.resume()
     }
+    
 }

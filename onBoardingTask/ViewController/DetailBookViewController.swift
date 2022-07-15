@@ -5,10 +5,11 @@ import RxSwift
 import RxCocoa
 
 class DetailBookViewController: UIViewController {
-    var sendingIsbn : String = ""
+    let sendingIsbn : String
     lazy var viewModel =  ViewModel()
     var disposeBag = DisposeBag()
     lazy var netwroking = NetworkService.shared
+    var isbnValue =   BehaviorSubject<String>(value: "")
     
     //MARK: ViewUI
     lazy var safetyArea = UIView()
@@ -51,11 +52,22 @@ class DetailBookViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Detail Book"
-        print("여긴되니? \(sendingIsbn)")
-        bindIsbn()
         getData(sendingIsbn)
         setView()
     }
+     init(sendingIsbn: String){
+         self.sendingIsbn = sendingIsbn
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit{
+        print("DetailBook 풀렸습니다")
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         guard  let inputbox  =  textView.text, let isbn13 = isbn13.text   else { return }
         if inputbox != "메모를 입력해주세요"{
@@ -64,22 +76,16 @@ class DetailBookViewController: UIViewController {
         }
     }
     
-    func bindIsbn(){
-        viewModel.isbnValue.subscribe (onNext : { [weak self]  item in
-            guard let self  = self else { return }
-            print("heeeeey :\(item)")
-            self.sendingIsbn =  item
-        })
-            .disposed(by: disposeBag)
-    }
-    func getData(_ query: String){
-        netwroking.loadData(caseName : .detail ,query: "\(query)", returnType: DetailBook.self) { [weak self] item in
-            guard let self  = self else  { return }
-            self.setUpValue(item)
-        }
+    func getData(_ isbn: String){
+        netwroking.loadData(caseName: .detail, query: isbn, returnType: DetailBook.self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext:{ [weak self] in
+                guard let self =  self else { return }
+                self.setUpValue($0)
+            }).disposed(by: disposeBag)
     }
     
-    func setUpValue( _ book :DetailBook){
+    func setUpValue(_ book :DetailBook){
         mainTitle.text = book.title
         subTitle.text = book.subtitle
         price.text = "\(book.price.calculateToDaller()) 원"
@@ -164,6 +170,10 @@ class DetailBookViewController: UIViewController {
             $0.directionalHorizontalEdges.bottom.equalToSuperview()
         }
     }
+    
+//    func bindRelay(relay: PublishRelay<String>) {
+//        relay.bind(to: isbn13Relay).disposed(by: disposeBag)
+//    }
 }
 
 extension DetailBookViewController: UITextViewDelegate{

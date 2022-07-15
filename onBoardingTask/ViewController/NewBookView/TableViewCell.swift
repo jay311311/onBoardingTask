@@ -10,20 +10,13 @@ class TableViewCell: UITableViewCell {
         setView()
     }
     
-    deinit { print("NewBook Cell 이 해제 되었습니다")}
+    deinit { print("NewBook Cell 풀렸습니다")}
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        thumbnail.image = nil
-        mainTitle.text = ""
-        subTitle.text = ""
-        isbn13.text = ""
-        price.text = ""
-    }
+   
     lazy var newBookList = UIView().then {
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
@@ -53,20 +46,19 @@ class TableViewCell: UITableViewCell {
         $0.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         $0.textAlignment = .center
     }
-    
-    func setUpValue( _ book :Books){
-        mainTitle.text = book.title
-        subTitle.text = book.subtitle
-        price.text = "\(book.price.calculateToDaller()) 원"
-        isbn13.text = book.isbn13
-        viewModel.showThumbnail(book.image){ [weak self] item in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.thumbnail.image =  UIImage(data: item)
-            }
-        }
-        
-    }
+//    
+//    func setUpValue( _ book :Books){
+//        mainTitle.text = book.title
+//        subTitle.text = book.subtitle
+//        price.text = "\(book.price.calculateToDaller()) 원"
+//        isbn13.text = book.isbn13
+//        viewModel.showThumbnail(book.image){ [weak self] item in
+//            guard let self = self else { return }
+//            DispatchQueue.main.async {
+//                self.thumbnail.image =  UIImage(data: item)
+//            }
+//        }
+//    }
 
 //     MARK:  setupLayout
     func setView(){
@@ -80,7 +72,6 @@ class TableViewCell: UITableViewCell {
         bookImg.snp.makeConstraints {
             $0.directionalHorizontalEdges.top.equalToSuperview()
             $0.height.equalToSuperview().multipliedBy(2.0/3.0)
-//            $0.bottom.equalTo(bookInfo.snp.top)
         }
         
         newBookList.addSubview(bookInfo)

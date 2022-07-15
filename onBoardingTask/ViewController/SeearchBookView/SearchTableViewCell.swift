@@ -25,7 +25,9 @@ class SearchTableViewCell: UITableViewCell {
         $0.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         $0.textColor = .tintColor
     }
-    
+    deinit{
+        print("SearchBook Cell 풀렸습니다")
+    }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setView()
