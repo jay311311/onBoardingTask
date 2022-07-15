@@ -2,12 +2,14 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import RxRelay
 
 class SearchViewController: UIViewController{
     lazy var page = 1
     lazy var netwroking = NetworkService.shared
-    lazy var resultData:[SearchBook] = []
+    lazy var SearchRely =  PublishRelay<[Books]>()
     var disposeBag =  DisposeBag()
+    lazy var viewModel = ViewModel()
     lazy var showingNewBookCell : Bool = false
     lazy var saftyArea  = UIView()
     lazy var searchController = UISearchController(searchResultsController: nil).then {
@@ -20,7 +22,7 @@ class SearchViewController: UIViewController{
     lazy var searchTable  = UITableView().then {
         $0.register(SearchTableViewCell.self, forCellReuseIdentifier: "searchCell")
         $0.register(TableViewCell.self, forCellReuseIdentifier: "newBook")
-//        $0.delegate = self
+        $0.delegate = self
 //        $0.dataSource = self
         $0.backgroundView =  self.bgLabel
     }
@@ -42,13 +44,42 @@ class SearchViewController: UIViewController{
         showingNewBookCell = true
         setView()
         getHistoryData()
-        bindIsbn13()
+        bindTableView()
     }
    
     func getHistoryData(){
         guard let historyText =  UserDefaults.standard.string(forKey: "history") else { return  bgLabel.text = "검색결과가 없습니다"}
             getData(historyText)
             bgLabel.text = ""
+    }
+    func bindTableView(){
+        if showingNewBookCell {
+            SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "newBook", cellType: TableViewCell.self)) { [weak self](index, element, cell) in
+                guard let self = self else  { return }
+                cell.mainTitle.text = element.title
+                cell.subTitle.text = element.subtitle
+                cell.isbn13.text = element.isbn13
+                cell.price.text = element.price
+                self.viewModel.showThumbnail(element.image) {
+                    cell.thumbnail.image = UIImage(data: $0)
+                }
+            }.disposed(by: disposeBag)
+        }else {
+            SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "searchCell", cellType: SearchTableViewCell.self)){ [weak self](index, element, cell) in
+                guard let self = self else  { return }
+                cell.mainTitle.text = element.title
+                cell.subTitle.text = element.subtitle
+                cell.isbn13.text = element.isbn13
+                cell.price.text = element.price
+                self.viewModel.showThumbnail(element.image) {
+                    cell.thumbnail.image = UIImage(data: $0)
+                }
+            }.disposed(by: disposeBag)
+        }
+        searchTable.rx.modelSelected(Books.self)
+            .subscribe(onNext: {[weak self] in
+                self?.pushToDetail($0.isbn13)
+            } ).disposed(by: disposeBag)
     }
     
     func setView(){
@@ -74,27 +105,15 @@ class SearchViewController: UIViewController{
             .observe(on: MainScheduler.instance)
             .subscribe(onNext:{ [weak self]  in
                 guard let self  = self else  {  return }
-                self.resultData = []
-                self.resultData.append($0)
+                self.SearchRely.accept($0.books)
                 self.searchTable.reloadData()
             }).disposed(by: disposeBag)
     }
-    func bindIsbn13(){
-        searchTable.rx.itemSelected
-            .map{self.pickupIsbn($0.row)}
-            .subscribe(onNext:{ [weak self] in
-            guard let self = self else  { return }
-            self.pushToDetail($0)
-            }).disposed(by: disposeBag)
-    }
-    func pickupIsbn(_ index:Int)->String{
-        guard let isbn = resultData.first?.books[index].isbn13 else { return "" }
-        return isbn
-    }
+
+
     func pushToDetail(_ isbn:String){
         DetailBookViewController(sendingIsbn: isbn).then { [weak self ] in
             guard let self  =  self else { return }
-//            $0.viewModel.isbnValue.onNext(isbn)
             $0.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController($0, animated: true)
         }
@@ -114,7 +133,7 @@ extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  
                 UserDefaults.standard.setValue(item, forKey: "history")
             }
         }else{
-            resultData = []
+//            resultData = []
             DispatchQueue.main.async {
                 self.searchTable.backgroundView = self.bgLabel
                 self.bgLabel.text = "검색결과가 없습니다"
@@ -161,3 +180,13 @@ extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  
 //        tableView.deselectRow(at: indexPath, animated: true)
 //    }
 //}
+extension SearchViewController: UITableViewDelegate{
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if showingNewBookCell{
+            return 300
+        }else{
+            return 150
+        }
+    }
+}

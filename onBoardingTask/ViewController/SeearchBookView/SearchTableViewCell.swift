@@ -3,13 +3,12 @@ import SnapKit
 import Then
 
 class SearchTableViewCell: UITableViewCell {
-    lazy var viewModel = ViewModel()
     lazy var bookInfo = UIView()
     lazy var bookImg = UIView()
     lazy var thumbnail = UIImageView().then{
         $0.contentMode = .scaleAspectFit
     }
-    lazy  var title = UILabel().then{
+    lazy  var mainTitle = UILabel().then{
         $0.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     }
     lazy var subTitle = UILabel().then{
@@ -56,8 +55,8 @@ class SearchTableViewCell: UITableViewCell {
             $0.leading.equalTo(bookImg.snp.trailing)
         }
         
-        bookInfo.addSubview(title)
-        title.snp.makeConstraints {
+        bookInfo.addSubview(mainTitle)
+        mainTitle.snp.makeConstraints {
             $0.directionalHorizontalEdges.equalToSuperview().inset(10)
             $0.top.equalToSuperview().inset(20)
         }
@@ -65,13 +64,13 @@ class SearchTableViewCell: UITableViewCell {
         bookInfo.addSubview(subTitle)
         subTitle.snp.makeConstraints {
             $0.directionalHorizontalEdges.equalToSuperview().inset(10)
-            $0.top.equalTo(title.snp.bottom).offset(5)
+            $0.top.equalTo(mainTitle.snp.bottom).offset(5)
         }
         
         bookInfo.addSubview(isbn13)
         isbn13.snp.makeConstraints {
             $0.directionalHorizontalEdges.equalToSuperview().inset(10)
-            $0.top.equalTo(title.snp.bottom).offset(30)
+            $0.top.equalTo(mainTitle.snp.bottom).offset(30)
         }
         
         bookInfo.addSubview(price)
@@ -87,16 +86,16 @@ class SearchTableViewCell: UITableViewCell {
         }
     }
     
-    func setUpValue(_ item : Books){
-        title.text =  item.title
-        subTitle.text =  item.subtitle
-        isbn13.text = item.isbn13
-        price.text = "\(item.price.calculateToDaller()) 원"
-        url.text =  item.url
-        viewModel.showThumbnail(item.image){ [weak self] item in
-            guard let self  =  self else { return }
-            self.thumbnail.image =  UIImage(data: item)
-        }
-    }
+//    func setUpValue(_ item : Books){
+//        maintitle.text =  item.title
+//        subTitle.text =  item.subtitle
+//        isbn13.text = item.isbn13
+//        price.text = "\(item.price.calculateToDaller()) 원"
+//        url.text =  item.url
+//        viewModel.showThumbnail(item.image){ [weak self] item in
+//            guard let self  =  self else { return }
+//            self.thumbnail.image =  UIImage(data: item)
+//        }
+//    }
 }
 
