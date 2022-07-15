@@ -2,7 +2,7 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
-import RxRelay
+import RxCocoa
 
 class SearchViewController: UIViewController{
     lazy var page = 1
@@ -10,20 +10,22 @@ class SearchViewController: UIViewController{
     lazy var SearchRely =  PublishRelay<[Books]>()
     var disposeBag =  DisposeBag()
     lazy var viewModel = ViewModel()
+    
     lazy var showingNewBookCell : Bool = false
     lazy var saftyArea  = UIView()
-    lazy var searchController = UISearchController(searchResultsController: nil).then {
-        $0.searchResultsUpdater = self
-    }
+    lazy var searchController = UISearchController(searchResultsController: nil)
+//        .then {
+//        $0.searchResultsUpdater = self
+//    }
     lazy var searchBar =  UISearchBar().then {
         $0.placeholder = "검색어를 입력해보세요"
-        $0.delegate = self
+//        $0.delegate = self
     }
     lazy var searchTable  = UITableView().then {
         $0.register(SearchTableViewCell.self, forCellReuseIdentifier: "searchCell")
         $0.register(TableViewCell.self, forCellReuseIdentifier: "newBook")
         $0.delegate = self
-//        $0.dataSource = self
+        $0.separatorStyle = .none
         $0.backgroundView =  self.bgLabel
     }
     lazy var searchTableBg = UIView()
@@ -45,14 +47,43 @@ class SearchViewController: UIViewController{
         setView()
         getHistoryData()
         bindTableView()
+        editSearchBar()
     }
    
     func getHistoryData(){
-        guard let historyText =  UserDefaults.standard.string(forKey: "history") else { return  bgLabel.text = "검색결과가 없습니다"}
+        guard let historyText =  UserDefaults.standard.string(forKey: "history") else { return }
             getData(historyText)
             bgLabel.text = ""
     }
+    
+    //MARK: - Rx: text Event to searhbar
+    func editSearchBar(){
+        searchController.searchBar.rx.text.orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext:{ [weak self] item in
+                print("지금 검색어 넣는중 _\(item)_")
+                guard let self  =  self, let  historyText = UserDefaults.standard.string(forKey: "history"),let searchText = self.searchController.searchBar.text else { return  }
+            
+                if  searchText.count >= 2{
+                    self.showingNewBookCell = false
+                        print("검색되야지 이제??\(searchText)")
+                        self.getData(searchText)
+                    UserDefaults.standard.setValue(searchText, forKey: "history")
+                }else if searchText == ""{
+                    self.getData(historyText)
+                }else{
+                        self.SearchRely.accept([])
+                        self.searchTable.backgroundView = self.bgLabel
+                        self.bgLabel.text = "검색결과가 없습니다"
+                }
+                
+           
+            }).disposed(by: disposeBag)
+    }
+    
+    //MARK: - Rx: tableView
     func bindTableView(){
+        //MARK: binding to Tableview
         if showingNewBookCell {
             SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "newBook", cellType: TableViewCell.self)) { [weak self](index, element, cell) in
                 guard let self = self else  { return }
@@ -76,12 +107,24 @@ class SearchViewController: UIViewController{
                 }
             }.disposed(by: disposeBag)
         }
+        //MARK: tap Evet to tableview
         searchTable.rx.modelSelected(Books.self)
             .subscribe(onNext: {[weak self] in
                 self?.pushToDetail($0.isbn13)
             } ).disposed(by: disposeBag)
     }
     
+    func pushToDetail(_ isbn:String){
+        DetailBookViewController(sendingIsbn: isbn).then { [weak self ] in
+            guard let self  =  self else { return }
+            $0.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController($0, animated: true)
+        }
+    }
+    
+    
+    
+    //MARK: - SetUp UIView
     func setView(){
         view.addSubview(saftyArea)
         saftyArea.snp.makeConstraints {
@@ -99,89 +142,39 @@ class SearchViewController: UIViewController{
             $0.top.equalTo(searchTable.snp.top).inset(5)
         }
     }
-    
+    //MARK: - NetworkService
     func getData(_ searchItem : String){
         netwroking.loadData(caseName: .search,query: searchItem, page:page,returnType: SearchBook.self)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext:{ [weak self]  in
                 guard let self  = self else  {  return }
                 self.SearchRely.accept($0.books)
-                self.searchTable.reloadData()
             }).disposed(by: disposeBag)
     }
 
 
-    func pushToDetail(_ isbn:String){
-        DetailBookViewController(sendingIsbn: isbn).then { [weak self ] in
-            guard let self  =  self else { return }
-            $0.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController($0, animated: true)
-        }
-    }
+   
 }
-
-
-
-
-extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let item =   searchController.searchBar.text, let  historyText = UserDefaults.standard.string(forKey: "history") else { return  }
-        if item.count  >= 2   {
-            showingNewBookCell = false
-            if historyText != item {
-                getData(item)
-                UserDefaults.standard.setValue(item, forKey: "history")
-            }
-        }else{
-//            resultData = []
-            DispatchQueue.main.async {
-                self.searchTable.backgroundView = self.bgLabel
-                self.bgLabel.text = "검색결과가 없습니다"
-                self.searchTable.reloadData()
-            }
-        }
-    }
-}
-
-//extension SearchViewController: UITableViewDataSource, UITableViewDelegate{
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return resultData.first?.books.count  ?? 0
-//    }
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let item = resultData.first?.books , let searchText =   searchController.searchBar.text else { return UITableViewCell() }
-//        if  showingNewBookCell == true {
-//            tableView.separatorStyle = .none
-//            if let  cell =  tableView.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as? TableViewCell{
-//                cell.setUpValue(item[indexPath.item])
-//                return cell
+//
+//extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  {
+//    func updateSearchResults(for searchController: UISearchController) {
+//        guard let item =   searchController.searchBar.text, let  historyText = UserDefaults.standard.string(forKey: "history") else { return  }
+//        if item.count  >= 2   {
+//            showingNewBookCell = false
+//            if historyText != item {
+//                getData(item)
+//                UserDefaults.standard.setValue(item, forKey: "history")
 //            }
 //        }else{
-//            tableView.separatorStyle = .singleLine
-//            if let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as? SearchTableViewCell{
-//                cell.setUpValue(item[indexPath.item])
-//                return cell
+//            DispatchQueue.main.async {
+//                self.searchTable.backgroundView = self.bgLabel
+//                self.bgLabel.text = "검색결과가 없습니다"
 //            }
 //        }
-//        return UITableViewCell()
 //    }
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        guard let searchText  = searchController.searchBar.text else { return 0 }
-//        if showingNewBookCell == true{
-//            return 300
-//        }else{
-//            return 150
-//        }
-//    }
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        DetailBookViewController().then {
-//            $0.hidesBottomBarWhenPushed = true
-//            self.navigationController?.pushViewController($0, animated: true)
-//        }
-//        tableView.deselectRow(at: indexPath, animated: true)
-//    }
-//}
+
+
 extension SearchViewController: UITableViewDelegate{
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if showingNewBookCell{
             return 300

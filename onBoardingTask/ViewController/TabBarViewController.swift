@@ -23,7 +23,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(receiveErrorMessage), name: Notification.Name("errorMessage"), object: nil)
         setViewControllers([newNavi,searchNavi], animated: true)
-        self.delegate = self
+//        self.delegate = self
     }
     
     @objc func receiveErrorMessage(_ notification:Notification){
@@ -32,9 +32,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         present(alert, animated: false, completion: nil)
     }
 
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-//        print("\(viewController.title)")
-    }
     
     
 }

@@ -6,10 +6,10 @@ import RxCocoa
 
 class DetailBookViewController: UIViewController {
     let sendingIsbn : String
+    lazy var placeholderText:String = "메모를 입력해주세요"
+    lazy var netwroking = NetworkService.shared
     lazy var viewModel =  ViewModel()
     var disposeBag = DisposeBag()
-    lazy var netwroking = NetworkService.shared
-    var isbnValue =   BehaviorSubject<String>(value: "")
     
     //MARK: ViewUI
     lazy var safetyArea = UIView()
@@ -40,24 +40,21 @@ class DetailBookViewController: UIViewController {
     }
     lazy var textView = UITextView().then{
         $0.backgroundColor = .white
-        $0.text = "메모를 입력해주세요"
+        $0.text = placeholderText
         $0.textColor = .systemGray3
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.lightGray.cgColor
         $0.layer.cornerRadius = 5.0
-        $0.delegate = self
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        title = "Detail Book"
-        getData(sendingIsbn)
-        setView()
-    }
+
      init(sendingIsbn: String){
          self.sendingIsbn = sendingIsbn
         super.init(nibName: nil, bundle: nil)
+         view.backgroundColor = .white
+         title = "Detail Book"
+         getData(sendingIsbn)
+         setView()
+         editTextView()
     }
     
     required init?(coder: NSCoder) {
@@ -70,7 +67,7 @@ class DetailBookViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         guard  let inputbox  =  textView.text, let isbn13 = isbn13.text   else { return }
-        if inputbox != "메모를 입력해주세요"{
+        if inputbox != placeholderText {
             print("\(inputbox)를 저장했다")
             UserDefaults.standard.setValue(inputbox, forKey: isbn13)
         }
@@ -95,7 +92,18 @@ class DetailBookViewController: UIViewController {
             self.thumbnail.image = UIImage(data: data)
         } // Kingfisher 라이브러리 사용해보기
         saveInputText(book.isbn13)
-        
+    }
+    
+    //MARK: - Rx : textView Editing Event
+    func editTextView(){
+        textView.rx.didBeginEditing
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext:{ [weak self] item in
+                guard let self  =  self  else  { return }
+                self.textView.text = ""
+                self.textView.textColor = .black
+            print("editing start \(item)")
+            }).disposed(by: disposeBag)
     }
     
     func saveInputText(_ key :String){
@@ -169,18 +177,6 @@ class DetailBookViewController: UIViewController {
             $0.top.equalTo(line.snp.bottom).offset(20)
             $0.directionalHorizontalEdges.bottom.equalToSuperview()
         }
-    }
-    
-//    func bindRelay(relay: PublishRelay<String>) {
-//        relay.bind(to: isbn13Relay).disposed(by: disposeBag)
-//    }
-}
-
-extension DetailBookViewController: UITextViewDelegate{
-    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        textView.text = ""
-        textView.textColor = .black
-        return true
     }
 }
 
