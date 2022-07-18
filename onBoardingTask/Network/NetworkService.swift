@@ -4,7 +4,7 @@ import RxSwift
 class NetworkService {
     static let shared = NetworkService()
     
-    private init() { }
+    private init(){    }
     
     //urlSession
     func makeURL(url:String , query:String, page :Int) -> URL {

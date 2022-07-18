@@ -14,12 +14,12 @@ class SearchViewController: UIViewController{
     lazy var showingNewBookCell : Bool = false
     lazy var saftyArea  = UIView()
     lazy var searchController = UISearchController(searchResultsController: nil)
-//        .then {
-//        $0.searchResultsUpdater = self
-//    }
+    //        .then {
+    //        $0.searchResultsUpdater = self
+    //    }
     lazy var searchBar =  UISearchBar().then {
         $0.placeholder = "검색어를 입력해보세요"
-//        $0.delegate = self
+        //        $0.delegate = self
     }
     lazy var searchTable  = UITableView().then {
         $0.register(SearchTableViewCell.self, forCellReuseIdentifier: "searchCell")
@@ -48,43 +48,45 @@ class SearchViewController: UIViewController{
         getHistoryData()
         bindTableView()
         editSearchBar()
+        pushToDetail()
     }
-   
+    
     func getHistoryData(){
         guard let historyText =  UserDefaults.standard.string(forKey: "history") else { return }
-            getData(historyText)
-            bgLabel.text = ""
+        getData(historyText)
+        bgLabel.text = ""
     }
     
     //MARK: - Rx: text Event to searhbar
     func editSearchBar(){
+        searchController.searchBar.rx.textDidBeginEditing.subscribe(onNext:{[weak self] in
+            guard let self = self else { return }
+            self.showingNewBookCell = false
+//            self.bindTableView()
+             print("몇번찍히나")
+        })
+        
         searchController.searchBar.rx.text.orEmpty
             .distinctUntilChanged()
             .subscribe(onNext:{ [weak self] item in
-                print("지금 검색어 넣는중 _\(item)_")
-                guard let self  =  self, let  historyText = UserDefaults.standard.string(forKey: "history"),let searchText = self.searchController.searchBar.text else { return  }
-            
-                if  searchText.count >= 2{
-                    self.showingNewBookCell = false
-                        print("검색되야지 이제??\(searchText)")
-                        self.getData(searchText)
-                    UserDefaults.standard.setValue(searchText, forKey: "history")
-                }else if searchText == ""{
-                    self.getData(historyText)
-                }else{
-                        self.SearchRely.accept([])
-                        self.searchTable.backgroundView = self.bgLabel
-                        self.bgLabel.text = "검색결과가 없습니다"
+                guard let self  =  self, let  historyText = UserDefaults.standard.string(forKey: "history") else { return  }
+                if  item.count >= 2{
+                    print("검색되야지 이제??\(item) & \(self.showingNewBookCell)")
+                    self.getData(item)
+                    UserDefaults.standard.setValue(item, forKey: "history")
+                }else if item == ""{
+                    self.SearchRely.accept([])
+                    self.searchTable.backgroundView = self.bgLabel
+                    self.bgLabel.text = "검색결과가 없습니다"
                 }
-                
-           
             }).disposed(by: disposeBag)
     }
     
     //MARK: - Rx: tableView
     func bindTableView(){
         //MARK: binding to Tableview
-        if showingNewBookCell {
+        if showingNewBookCell == true {
+            print("showingNewBookCell true 가 어떻게 변했나?\(showingNewBookCell)")
             SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "newBook", cellType: TableViewCell.self)) { [weak self](index, element, cell) in
                 guard let self = self else  { return }
                 cell.mainTitle.text = element.title
@@ -96,6 +98,7 @@ class SearchViewController: UIViewController{
                 }
             }.disposed(by: disposeBag)
         }else {
+            print("showingNewBookCell false 가 어떻게 변했나?\(showingNewBookCell)")
             SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "searchCell", cellType: SearchTableViewCell.self)){ [weak self](index, element, cell) in
                 guard let self = self else  { return }
                 cell.mainTitle.text = element.title
@@ -107,22 +110,21 @@ class SearchViewController: UIViewController{
                 }
             }.disposed(by: disposeBag)
         }
-        //MARK: tap Evet to tableview
+    }
+    
+    //MARK: tap Evet to tableview
+    func pushToDetail(){
         searchTable.rx.modelSelected(Books.self)
-            .subscribe(onNext: {[weak self] in
-                self?.pushToDetail($0.isbn13)
+            .subscribe(onNext: {
+                DetailBookViewController(sendingIsbn: $0.isbn13).then { [weak self ] in
+                    guard let self  =  self else { return }
+                    $0.hidesBottomBarWhenPushed = true
+                    self.navigationController?.pushViewController($0, animated: true)
+                }
+//                self?.pushToDetail($0.isbn13)
             } ).disposed(by: disposeBag)
+       
     }
-    
-    func pushToDetail(_ isbn:String){
-        DetailBookViewController(sendingIsbn: isbn).then { [weak self ] in
-            guard let self  =  self else { return }
-            $0.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController($0, animated: true)
-        }
-    }
-    
-    
     
     //MARK: - SetUp UIView
     func setView(){
@@ -142,6 +144,7 @@ class SearchViewController: UIViewController{
             $0.top.equalTo(searchTable.snp.top).inset(5)
         }
     }
+    
     //MARK: - NetworkService
     func getData(_ searchItem : String){
         netwroking.loadData(caseName: .search,query: searchItem, page:page,returnType: SearchBook.self)
@@ -151,9 +154,6 @@ class SearchViewController: UIViewController{
                 self.SearchRely.accept($0.books)
             }).disposed(by: disposeBag)
     }
-
-
-   
 }
 //
 //extension SearchViewController:   UISearchBarDelegate, UISearchResultsUpdating  {
