@@ -44,19 +44,19 @@ class TableViewCell: UITableViewCell {
         $0.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         $0.textAlignment = .center
     }
-//    
-//    func setUpValue( _ book :Books){
-//        mainTitle.text = book.title
-//        subTitle.text = book.subtitle
-//        price.text = "\(book.price.calculateToDaller()) 원"
-//        isbn13.text = book.isbn13
-//        viewModel.showThumbnail(book.image){ [weak self] item in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async {
-//                self.thumbnail.image =  UIImage(data: item)
-//            }
-//        }
-//    }
+    
+    func setUpValue( _ book :Books){
+        mainTitle.text = book.title
+        subTitle.text = book.subtitle
+        price.text = "\(book.price.calculateToDaller()) 원"
+        isbn13.text = book.isbn13
+        ViewModel().showThumbnail(book.image){ [weak self] item in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.thumbnail.image =  UIImage(data: item)
+            }
+        }
+    }
 
 //     MARK:  setupLayout
     func setView(){

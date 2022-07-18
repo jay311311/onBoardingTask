@@ -86,16 +86,16 @@ class SearchTableViewCell: UITableViewCell {
         }
     }
     
-//    func setUpValue(_ item : Books){
-//        maintitle.text =  item.title
-//        subTitle.text =  item.subtitle
-//        isbn13.text = item.isbn13
-//        price.text = "\(item.price.calculateToDaller()) 원"
-//        url.text =  item.url
-//        viewModel.showThumbnail(item.image){ [weak self] item in
-//            guard let self  =  self else { return }
-//            self.thumbnail.image =  UIImage(data: item)
-//        }
-//    }
+    func setUpValue(_ item : Books){
+        mainTitle.text =  item.title
+        subTitle.text =  item.subtitle
+        isbn13.text = item.isbn13
+        price.text = "\(item.price.calculateToDaller()) 원"
+        url.text =  item.url
+        ViewModel().showThumbnail(item.image){ [weak self] item in
+            guard let self  =  self else { return }
+            self.thumbnail.image =  UIImage(data: item)
+        }
+    }
 }
 

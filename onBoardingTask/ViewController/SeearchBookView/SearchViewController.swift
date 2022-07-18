@@ -62,7 +62,6 @@ class SearchViewController: UIViewController{
         searchController.searchBar.rx.textDidBeginEditing.subscribe(onNext:{[weak self] in
             guard let self = self else { return }
             self.showingNewBookCell = false
-//            self.bindTableView()
              print("몇번찍히나")
         })
         
@@ -85,31 +84,48 @@ class SearchViewController: UIViewController{
     //MARK: - Rx: tableView
     func bindTableView(){
         //MARK: binding to Tableview
-        if showingNewBookCell == true {
-            print("showingNewBookCell true 가 어떻게 변했나?\(showingNewBookCell)")
-            SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "newBook", cellType: TableViewCell.self)) { [weak self](index, element, cell) in
-                guard let self = self else  { return }
-                cell.mainTitle.text = element.title
-                cell.subTitle.text = element.subtitle
-                cell.isbn13.text = element.isbn13
-                cell.price.text = element.price
-                self.viewModel.showThumbnail(element.image) {
-                    cell.thumbnail.image = UIImage(data: $0)
-                }
-            }.disposed(by: disposeBag)
-        }else {
-            print("showingNewBookCell false 가 어떻게 변했나?\(showingNewBookCell)")
-            SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "searchCell", cellType: SearchTableViewCell.self)){ [weak self](index, element, cell) in
-                guard let self = self else  { return }
-                cell.mainTitle.text = element.title
-                cell.subTitle.text = element.subtitle
-                cell.isbn13.text = element.isbn13
-                cell.price.text = element.price
-                self.viewModel.showThumbnail(element.image) {
-                    cell.thumbnail.image = UIImage(data: $0)
-                }
-            }.disposed(by: disposeBag)
-        }
+        SearchRely.bind(to: searchTable.rx.items){ [weak self] (element, row, item) -> UITableViewCell  in
+            guard let self = self  else  { return UITableViewCell() }
+            if self.showingNewBookCell {
+                var indexPath  =  IndexPath(item: row, section: 0)
+                guard let cell  =  element.dequeueReusableCell(withIdentifier: "newBook", for: indexPath) as? TableViewCell else  {return TableViewCell()}
+                cell.setUpValue(item)
+                return cell
+
+            }else{
+                var indexPath  =  IndexPath(item: row, section: 0)
+                guard let cell  =  element.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as? SearchTableViewCell else { return  SearchTableViewCell() }
+                cell.setUpValue(item)
+                
+                return cell
+
+            }
+                    }
+//        if showingNewBookCell == true {
+//            print("showingNewBookCell true 가 어떻게 변했나?\(showingNewBookCell)")
+//            SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "newBook", cellType: TableViewCell.self)) { [weak self](index, element, cell) in
+//                guard let self = self else  { return }
+//                cell.mainTitle.text = element.title
+//                cell.subTitle.text = element.subtitle
+//                cell.isbn13.text = element.isbn13
+//                cell.price.text = element.price
+//                self.viewModel.showThumbnail(element.image) {
+//                    cell.thumbnail.image = UIImage(data: $0)
+//                }
+//            }.disposed(by: disposeBag)
+//        }else {
+//            print("showingNewBookCell false 가 어떻게 변했나?\(showingNewBookCell)")
+//            SearchRely.bind(to: searchTable.rx.items(cellIdentifier: "searchCell", cellType: SearchTableViewCell.self)){ [weak self](index, element, cell) in
+//                guard let self = self else  { return }
+//                cell.mainTitle.text = element.title
+//                cell.subTitle.text = element.subtitle
+//                cell.isbn13.text = element.isbn13
+//                cell.price.text = element.price
+//                self.viewModel.showThumbnail(element.image) {
+//                    cell.thumbnail.image = UIImage(data: $0)
+//                }
+//            }.disposed(by: disposeBag)
+//        }
     }
     
     //MARK: tap Evet to tableview
@@ -182,4 +198,9 @@ extension SearchViewController: UITableViewDelegate{
             return 150
         }
     }
+}
+
+
+class SearchViewModel {
+    
 }

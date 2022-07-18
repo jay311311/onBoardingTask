@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  onBoardingTask
-//
-//  Created by pineone on 2022/06/28.
-//
-
 import UIKit
 
 @main
