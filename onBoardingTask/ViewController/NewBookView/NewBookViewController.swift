@@ -7,7 +7,7 @@ import RxCocoa
 class NewBookViewController: UIViewController {
     var disposeBag = DisposeBag()
     lazy var viewModel = NewBooksViewModel()
-//    lazy var newBookRely = PublishRelay<[Books]>()
+    //    lazy var newBookRely = PublishRelay<[Books]>()
     //MARK: View
     lazy var safetyArea  =  UIView()
     lazy var newBookTable = UITableView().then{
@@ -101,7 +101,6 @@ class NewBooksViewModel {
     
     var addNum : Int = 1
     lazy var  resultArray:[Books]  = []
-    lazy var inputSubject = PublishSubject<[Books]>()
     lazy var ouputRely = PublishRelay<[Books]>()
     var disposeBag  = DisposeBag()
     
@@ -125,24 +124,12 @@ class NewBooksViewModel {
             .subscribe(onNext:{ [weak self]  in
                 guard let self  = self else { return }
                 self.resultArray += $0.books
-                //                let block  = self.resultArray.prefix(5)
-                //                self.ouputRely.accept(Array(block))
-                self.inputSubject.onNext($0.books)
-            }).disposed(by: disposeBag)
-    }
-    
-    func subscribeInputSubject(){
-        inputSubject
-            .subscribe(onNext:{ [weak self] in
-                guard let self  = self else  { return }
-                print("작동1???\(self.addNum)")
-                let block  = $0.prefix(5 * self.addNum)
+                let block  = self.resultArray.prefix(5)
                 self.ouputRely.accept(Array(block))
+                //                self.inputSubject.onNext($0.books)
             }).disposed(by: disposeBag)
     }
-    
     init(){
-        subscribeInputSubject()
         getData()
     }
 }
