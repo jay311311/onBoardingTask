@@ -7,8 +7,7 @@ import RxCocoa
 class NewBookViewController: UIViewController {
     var disposeBag = DisposeBag()
     lazy var viewModel = NewBooksViewModel()
-    lazy var newBookRely = PublishRelay<[Books]>()
-    
+//    lazy var newBookRely = PublishRelay<[Books]>()
     //MARK: View
     lazy var safetyArea  =  UIView()
     lazy var newBookTable = UITableView().then{
@@ -17,9 +16,7 @@ class NewBookViewController: UIViewController {
         $0.delegate = self
     }
     
-    deinit{
-        print("NewBook 풀렸습니다")
-    }
+    deinit{ print("NewBook 풀렸습니다") }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +25,7 @@ class NewBookViewController: UIViewController {
         bindTableView()
         refreshTableView()
     }
+    
     //MARK: SetUpView
     func setView(){
         view.addSubview(safetyArea)
@@ -72,7 +70,7 @@ class NewBookViewController: UIViewController {
         }
     }
     
-    //MARK: - Rx :Scroll Event
+    //MARK:  Rx :Scroll Event
     func refreshTableView(){
         newBookTable.rx.didEndDragging
             .subscribe(onNext:{ [weak self] item in
@@ -99,22 +97,20 @@ extension NewBookViewController :  UITableViewDelegate{
 
 //MARK: - ViewModel
 class NewBooksViewModel {
-    var disposeBag  = DisposeBag()
-    var addNum : Int = 0
+    lazy var netwroking = NetworkService.shared
+    
+    var addNum : Int = 1
     lazy var  resultArray:[Books]  = []
     lazy var inputSubject = PublishSubject<[Books]>()
     lazy var ouputRely = PublishRelay<[Books]>()
+    var disposeBag  = DisposeBag()
     
     func showFiveContent(){
-        addNum += 1
-        inputSubject
-            .subscribe(onNext:{ [weak self] in
-                guard let self  = self else  { return }
-                let block  = $0.prefix(5)
-                self.ouputRely.accept(Array(block))
-            }).disposed(by: disposeBag)
-        let array   = self.resultArray.prefix(5 * addNum)
-        ouputRely.accept(Array(array))
+        if addNum < 5 {
+            addNum += 1
+            let array   = self.resultArray.prefix(5 * addNum)
+            ouputRely.accept(Array(array))
+        }
     }
     
     func showThumbnail(_ imageUrl : String,  completion : @escaping (Data) -> Void ){
@@ -124,14 +120,29 @@ class NewBooksViewModel {
         }
     }
     
-    init(){
-        lazy var netwroking = NetworkService.shared
+    func getData(){
         netwroking.loadData(caseName: .new, returnType: NewBook.self)
-            .subscribe(onNext:{ [weak self] array in
+            .subscribe(onNext:{ [weak self]  in
                 guard let self  = self else { return }
-                self.resultArray += array.books
-                self.inputSubject.onNext(array.books)
+                self.resultArray += $0.books
+                //                let block  = self.resultArray.prefix(5)
+                //                self.ouputRely.accept(Array(block))
+                self.inputSubject.onNext($0.books)
             }).disposed(by: disposeBag)
-        showFiveContent()
+    }
+    
+    func subscribeInputSubject(){
+        inputSubject
+            .subscribe(onNext:{ [weak self] in
+                guard let self  = self else  { return }
+                print("작동1???\(self.addNum)")
+                let block  = $0.prefix(5 * self.addNum)
+                self.ouputRely.accept(Array(block))
+            }).disposed(by: disposeBag)
+    }
+    
+    init(){
+        subscribeInputSubject()
+        getData()
     }
 }

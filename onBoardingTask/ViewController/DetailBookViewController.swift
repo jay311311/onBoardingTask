@@ -3,15 +3,17 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import Alamofire
 
 class DetailBookViewController: UIViewController {
     let sendingIsbn : String
     lazy var placeholderText:String = "메모를 입력해주세요"
-    lazy var netwroking = NetworkService.shared
-    lazy var viewModel =  ViewModel()
+    lazy var viewModel =  DetailBookViewModel(isbn: sendingIsbn)
+//    lazy var detailRely  =  PublishRelay<DetailBook>()
     var disposeBag = DisposeBag()
     
-    //MARK: ViewUI
+    
+    //MARK: View
     lazy var safetyArea = UIView()
     lazy var bookImg = UIView().then {
         $0.backgroundColor = .systemGray5
@@ -52,7 +54,7 @@ class DetailBookViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
          view.backgroundColor = .white
          title = "Detail Book"
-         getData(sendingIsbn)
+         bindDetailBook ()
          setView()
          editTextView()
     }
@@ -67,19 +69,18 @@ class DetailBookViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         guard  let inputbox  =  textView.text, let isbn13 = isbn13.text   else { return }
-        if inputbox != placeholderText {
+        if inputbox != placeholderText && inputbox !=  UserDefaults.standard.string(forKey: sendingIsbn)   {
             print("\(inputbox)를 저장했다")
             UserDefaults.standard.setValue(inputbox, forKey: isbn13)
         }
     }
     
-    func getData(_ isbn: String){
-        netwroking.loadData(caseName: .detail, query: isbn, returnType: DetailBook.self)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext:{ [weak self] in
-                guard let self =  self else { return }
-                self.setUpValue($0)
-            }).disposed(by: disposeBag)
+
+    func bindDetailBook (){
+        viewModel.outputRely.subscribe(onNext:{ [weak self] in
+            guard let self  = self  else  { return }
+            self.setUpValue($0)
+        }).disposed(by: disposeBag)
     }
     
     func setUpValue(_ book :DetailBook){
@@ -182,3 +183,40 @@ class DetailBookViewController: UIViewController {
 
 
 
+class DetailBookViewModel {
+    let isbn : String
+    
+    var inputSubject =  PublishSubject<DetailBook>()
+    var outputRely  =  PublishRelay<DetailBook>()
+    var disposeBag = DisposeBag()
+   
+    lazy var netwroking = NetworkService.shared
+    
+    func makeOutput(){
+        inputSubject.subscribe(onNext:{ [weak self] item in
+            guard let self  =  self else { return }
+            self.outputRely.accept(item)
+        }).disposed(by: disposeBag)
+    }
+    func getData(_ isbn: String){
+        netwroking.loadData(caseName: .detail, query: isbn, returnType: DetailBook.self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext:{ [weak self] item in
+                guard let self =  self else { return }
+                self.inputSubject.onNext(item)
+            }).disposed(by: disposeBag)
+    }
+    
+    init(isbn:String){
+        self.isbn = isbn
+       getData(isbn)
+        makeOutput()
+    }
+    
+    func showThumbnail(_ imageUrl : String,  completion : @escaping (Data) -> Void ){
+        let url =  URL(string: imageUrl)
+        if let data = try? Data(contentsOf: url!){
+            completion(data)
+        }
+    }
+}
