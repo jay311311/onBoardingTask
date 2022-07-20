@@ -192,25 +192,25 @@ class DetailBookViewModel {
    
     lazy var netwroking = NetworkService.shared
     
-    func makeOutput(){
-        inputSubject.subscribe(onNext:{ [weak self] item in
-            guard let self  =  self else { return }
-            self.outputRely.accept(item)
-        }).disposed(by: disposeBag)
-    }
+//    func makeOutput(){
+//        inputSubject.subscribe(onNext:{ [weak self] item in
+//            guard let self  =  self else { return }
+//            self.outputRely.accept(item)
+//        }).disposed(by: disposeBag)
+//    }
     func getData(_ isbn: String){
         netwroking.loadData(caseName: .detail, query: isbn, returnType: DetailBook.self)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext:{ [weak self] item in
                 guard let self =  self else { return }
-                self.inputSubject.onNext(item)
+                self.outputRely.accept(item)
             }).disposed(by: disposeBag)
     }
     
     init(isbn:String){
         self.isbn = isbn
        getData(isbn)
-        makeOutput()
+//        makeOutput()
     }
     
     func showThumbnail(_ imageUrl : String,  completion : @escaping (Data) -> Void ){

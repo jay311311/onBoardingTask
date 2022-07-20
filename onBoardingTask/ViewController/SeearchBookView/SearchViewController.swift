@@ -39,9 +39,10 @@ class SearchViewController: UIViewController{
         showingNewBookCell = true
         setView()
         getHistoryData()
-        bindTableView()
         editSearchBar()
-        pushToDetail()
+        bindTableView()
+        tapTableView()
+        scrollTableView()
     }
     
     func getHistoryData(){
@@ -61,7 +62,7 @@ class SearchViewController: UIViewController{
                     self.viewModel.getData(item)
                     UserDefaults.standard.setValue(item, forKey: "history")
                 }else if item.count < 2{
-                    self.viewModel.outputSubject.accept([])
+                    self.viewModel.outputRely.accept([])
                     self.searchTable.backgroundView = self.bgLabel
                     self.bgLabel.text = "검색결과가 없습니다"
                 }
@@ -71,7 +72,7 @@ class SearchViewController: UIViewController{
     //MARK: - Rx: tableView
     func bindTableView(){
         //MARK: binding to Tableview
-        viewModel.outputSubject.bind(to: searchTable.rx.items){ [weak self] (element, row, item) -> UITableViewCell  in
+        viewModel.outputRely.bind(to: searchTable.rx.items){ [weak self] (element, row, item) -> UITableViewCell  in
             guard let self = self  else  { return UITableViewCell() }
             if self.showingNewBookCell {
                 guard let cell  =  element.dequeueReusableCell(withIdentifier: "newBook") as? TableViewCell else  {return TableViewCell()}
@@ -88,7 +89,7 @@ class SearchViewController: UIViewController{
     }
     
     //MARK: tap Evet to tableview
-    func pushToDetail(){
+    func tapTableView(){
         searchTable.rx.modelSelected(Books.self)
             .subscribe(onNext: {
                 DetailBookViewController(sendingIsbn: $0.isbn13).then { [weak self ] in
@@ -97,6 +98,19 @@ class SearchViewController: UIViewController{
                     self.navigationController?.pushViewController($0, animated: true)
                 }
             } ).disposed(by: disposeBag)
+    }
+    
+    //
+    func scrollTableView(){
+        searchTable.rx.didEndDragging
+            .subscribe(onNext:{ [weak self] _ in
+                guard let historyText =  UserDefaults.standard.string(forKey: "history") else { return }
+                guard let self  = self  else { return }
+                if self.searchTable.contentOffset.y >= self.searchTable.contentSize.height - self.searchTable.frame.height - 50 && self.showingNewBookCell == false {
+                    print("맞는 단어인가 ? \(historyText)")
+                    self.viewModel.getPagingInfo(historyText)
+                }
+            }).disposed(by: disposeBag)
     }
     
     //MARK: - SetUp UIView
@@ -132,34 +146,42 @@ extension SearchViewController: UITableViewDelegate{
 class SearchViewModel{
     let query: String?
     lazy var page = 1
-
+    
     lazy var netwroking = NetworkService.shared
     var disposeBag =  DisposeBag()
-
+    
+    var resultArray:[Books] = []
     var inputSubject  = PublishSubject<[Books]>()
-    var outputSubject = PublishRelay<[Books]>()
+    var outputRely = PublishRelay<[Books]>()
     
-    func getData(_ query :String?){
+    func getData(_ query :String? ){
         guard let query = query else { return }
-
-        netwroking.loadData(caseName: .search,query: query, page:page,returnType: SearchBook.self)
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext:{ [weak self]  in
-                        guard let self  = self else  {  return }
-                        self.inputSubject.onNext($0.books)
-                    }).disposed(by: disposeBag)
+        
+      netwroking.loadData(caseName: .search,query: query, page:page,returnType: SearchBook.self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext:{ [weak self]  in
+                guard let self  = self else  {  return }
+                self.resultArray = $0.books
+                self.outputRely.accept($0.books)
+            }).disposed(by: disposeBag)
     }
     
-    func subscribeInputSubject(){
-        inputSubject.subscribe(onNext:{ [weak self] in
-            guard let self  =  self else { return }
-            self.outputSubject.accept($0)
-        }).disposed(by: disposeBag)
+    func getPagingInfo(_ query :String?){
+        guard let query = query else { return }
+         page += 1
+        let netwroking = netwroking.loadData(caseName: .search,query: query, page:page,returnType: SearchBook.self)
+            .subscribe(onNext :{ [weak self] in
+                guard let self  = self  else  { return }
+                if $0.books.count  != 0 {
+                    self.resultArray += $0.books
+                self.outputRely.accept(self.resultArray)
+                }
+            }).disposed(by: disposeBag)
     }
+
     
     init(_ query : String? ){
         self.query = query
-        subscribeInputSubject()
         getData(query)
     }
 }

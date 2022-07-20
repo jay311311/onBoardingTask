@@ -129,6 +129,7 @@ class NewBooksViewModel {
                 //                self.inputSubject.onNext($0.books)
             }).disposed(by: disposeBag)
     }
+    
     init(){
         getData()
     }
