@@ -3,6 +3,7 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import RxFlow
 
 class SearchViewController: UIViewController{
     lazy var historyWord =  UserDefaults.standard.string(forKey: "history")
@@ -33,7 +34,9 @@ class SearchViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.searchController = searchController
-        title = "Search"
+//        topViewController?.title = "Search Books"
+//        self.tabBarItem.title = "Search"
+
         navigationItem.hidesSearchBarWhenScrolling = false
         view.backgroundColor = .white
         showingNewBookCell = true
@@ -143,7 +146,9 @@ extension SearchViewController: UITableViewDelegate{
     }
 }
 
-class SearchViewModel{
+class SearchViewModel:Stepper{
+    var steps = PublishRelay<Step>()
+    
     let query: String?
     lazy var page = 1
     

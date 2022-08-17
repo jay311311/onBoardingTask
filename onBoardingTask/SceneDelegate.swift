@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxFlow
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -17,11 +18,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
-        let rootVC = TabBarViewController()
-        let navVC = UINavigationController(rootViewController: rootVC)
-            window?.rootViewController = navVC
-        navVC.setNavigationBarHidden(true, animated: false)
-        window?.makeKeyAndVisible()
+
+        let coordinator = FlowCoordinator()
+        let appFlow = AppFlow()
+        
+        coordinator.coordinate(flow: appFlow, with: AppStepper(), allowStepWhenDismissed: false)
+        
+        Flows.use(appFlow, when: .created) { [weak self] root in
+            self?.window?.rootViewController = root
+            self?.window?.makeKeyAndVisible()
+        }
+//        let rootVC = TabBarViewController()
+//        let navVC = UINavigationController(rootViewController: rootVC)
+//            window?.rootViewController = navVC
+//        navVC.setNavigationBarHidden(true, animated: false)
+//        window?.makeKeyAndVisible()
        
     }
 

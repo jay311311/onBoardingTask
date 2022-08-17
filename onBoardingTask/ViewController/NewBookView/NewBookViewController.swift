@@ -3,6 +3,7 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import RxFlow
 
 class NewBookViewController: UIViewController {
     var disposeBag = DisposeBag()
@@ -21,6 +22,8 @@ class NewBookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
+//        self.title = "New Books"
+//        TabBarViewController.shared.tabBarItem.title = "New"
         view.backgroundColor = .white
         bindTableView()
         refreshTableView()
@@ -96,7 +99,9 @@ extension NewBookViewController :  UITableViewDelegate{
 }
 
 //MARK: - ViewModel
-class NewBooksViewModel {
+class NewBooksViewModel:Stepper {
+    var steps = PublishRelay<Step>()
+    
     lazy var netwroking = NetworkService.shared
     
     var addNum : Int = 1

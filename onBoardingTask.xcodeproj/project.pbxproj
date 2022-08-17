@@ -14,6 +14,11 @@
 		C391CC19286C22C000A21DD8 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC18286C22C000A21DD8 /* SearchViewController.swift */; };
 		C391CC1D286C3EED00A21DD8 /* DetailBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */; };
 		C3A5803B287E55C3004A82EA /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A5803A287E55C3004A82EA /* String+.swift */; };
+		C3A74C5628AC7334006FC293 /* MainStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A74C5528AC7334006FC293 /* MainStep.swift */; };
+		C3A74C5A28AC7AC9006FC293 /* AppFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A74C5928AC7AC9006FC293 /* AppFlow.swift */; };
+		C3A74C5C28AC7B2F006FC293 /* AppStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A74C5B28AC7B2F006FC293 /* AppStepper.swift */; };
+		C3A74C5E28AC7D62006FC293 /* NewBookFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A74C5D28AC7D62006FC293 /* NewBookFlow.swift */; };
+		C3A74C6228AC7D84006FC293 /* SearchBookFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A74C6128AC7D84006FC293 /* SearchBookFlow.swift */; };
 		C3A84DC7287414440019DEE1 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A84DC6287414440019DEE1 /* AlertViewController.swift */; };
 		C3C569E728767B2D000E26BA /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C569E628767B2D000E26BA /* NetworkService.swift */; };
 		C3EB8336286A825700D2A4BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EB8335286A825700D2A4BB /* AppDelegate.swift */; };
@@ -36,6 +41,11 @@
 		C391CC18286C22C000A21DD8 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailBookViewController.swift; sourceTree = "<group>"; };
 		C3A5803A287E55C3004A82EA /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
+		C3A74C5528AC7334006FC293 /* MainStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainStep.swift; sourceTree = "<group>"; };
+		C3A74C5928AC7AC9006FC293 /* AppFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFlow.swift; sourceTree = "<group>"; };
+		C3A74C5B28AC7B2F006FC293 /* AppStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStepper.swift; sourceTree = "<group>"; };
+		C3A74C5D28AC7D62006FC293 /* NewBookFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBookFlow.swift; sourceTree = "<group>"; };
+		C3A74C6128AC7D84006FC293 /* SearchBookFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBookFlow.swift; sourceTree = "<group>"; };
 		C3A84DC6287414440019DEE1 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		C3C569E628767B2D000E26BA /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		C3EB8332286A825700D2A4BB /* onBoardingTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = onBoardingTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,6 +126,34 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		C3A74C5428AC730C006FC293 /* Coordinate */ = {
+			isa = PBXGroup;
+			children = (
+				C3A74C5528AC7334006FC293 /* MainStep.swift */,
+				C3A74C5828AC7A95006FC293 /* Stepper */,
+				C3A74C5728AC7A8B006FC293 /* Flow */,
+			);
+			path = Coordinate;
+			sourceTree = "<group>";
+		};
+		C3A74C5728AC7A8B006FC293 /* Flow */ = {
+			isa = PBXGroup;
+			children = (
+				C3A74C5928AC7AC9006FC293 /* AppFlow.swift */,
+				C3A74C6128AC7D84006FC293 /* SearchBookFlow.swift */,
+				C3A74C5D28AC7D62006FC293 /* NewBookFlow.swift */,
+			);
+			path = Flow;
+			sourceTree = "<group>";
+		};
+		C3A74C5828AC7A95006FC293 /* Stepper */ = {
+			isa = PBXGroup;
+			children = (
+				C3A74C5B28AC7B2F006FC293 /* AppStepper.swift */,
+			);
+			path = Stepper;
+			sourceTree = "<group>";
+		};
 		C3CDFE5228752B4300F7ACA6 /* SeearchBookView */ = {
 			isa = PBXGroup;
 			children = (
@@ -157,6 +195,7 @@
 			children = (
 				C3EB8335286A825700D2A4BB /* AppDelegate.swift */,
 				C3EB8337286A825700D2A4BB /* SceneDelegate.swift */,
+				C3A74C5428AC730C006FC293 /* Coordinate */,
 				C3A5803E287E5B63004A82EA /* Model */,
 				C3A58039287E55B1004A82EA /* Extension */,
 				C3ED992C286D653F00EC36D6 /* ViewController */,
@@ -295,15 +334,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3A74C5C28AC7B2F006FC293 /* AppStepper.swift in Sources */,
 				C391CC19286C22C000A21DD8 /* SearchViewController.swift in Sources */,
+				C3A74C5A28AC7AC9006FC293 /* AppFlow.swift in Sources */,
 				C3EB833A286A825700D2A4BB /* NewBookViewController.swift in Sources */,
 				C3C569E728767B2D000E26BA /* NetworkService.swift in Sources */,
+				C3A74C5E28AC7D62006FC293 /* NewBookFlow.swift in Sources */,
 				C3EB8336286A825700D2A4BB /* AppDelegate.swift in Sources */,
 				C38BB15A286EAD6300CFE959 /* TableViewCell.swift in Sources */,
 				C3EB8338286A825700D2A4BB /* SceneDelegate.swift in Sources */,
 				C391CC17286C1AD200A21DD8 /* TabBarViewController.swift in Sources */,
 				C3ED992E286D656E00EC36D6 /* ViewModel.swift in Sources */,
+				C3A74C6228AC7D84006FC293 /* SearchBookFlow.swift in Sources */,
 				C3A84DC7287414440019DEE1 /* AlertViewController.swift in Sources */,
+				C3A74C5628AC7334006FC293 /* MainStep.swift in Sources */,
 				C391CC1D286C3EED00A21DD8 /* DetailBookViewController.swift in Sources */,
 				C3A5803B287E55C3004A82EA /* String+.swift in Sources */,
 				C3EB834A286A976700D2A4BB /* Model.swift in Sources */,
