@@ -25,13 +25,16 @@ class AppFlow : Flow{
         switch step {
         case .initStep:
             return setUpTabBar()
+        case .Detail:
+            print("test1234")
+            return .none
         default :
             return .none
         }
     }
     
    private func setUpTabBar() -> FlowContributors{
-        
+        print("여긴찍히니?")
        Flows.use(newFlow, searchFlow, when: .created) { [weak self](root1:UINavigationController , root2:UINavigationController)  in
            guard let self  = self else { return }
 //           root1.navigationBar.prefersLargeTitles = true

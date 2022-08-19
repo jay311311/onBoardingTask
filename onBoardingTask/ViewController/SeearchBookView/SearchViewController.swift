@@ -34,9 +34,6 @@ class SearchViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.searchController = searchController
-//        topViewController?.title = "Search Books"
-//        self.tabBarItem.title = "Search"
-
         navigationItem.hidesSearchBarWhenScrolling = false
         view.backgroundColor = .white
         showingNewBookCell = true
@@ -189,4 +186,6 @@ class SearchViewModel:Stepper{
         self.query = query
         getData(query)
     }
+    
+    
 }

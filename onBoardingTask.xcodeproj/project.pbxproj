@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9DB6936D4E2D489972AF007A /* Pods_onBoardingTask.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72A32284E5B96A1E85DB3F9 /* Pods_onBoardingTask.framework */; };
+		C30902ED28AE5A8100F8AC6A /* ViewModeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30902EC28AE5A8100F8AC6A /* ViewModeType.swift */; };
 		C347924F2872D2A300DC1BD9 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C347924E2872D2A300DC1BD9 /* SearchTableViewCell.swift */; };
 		C38BB15A286EAD6300CFE959 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38BB159286EAD6300CFE959 /* TableViewCell.swift */; };
 		C391CC17286C1AD200A21DD8 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */; };
@@ -35,6 +36,7 @@
 /* Begin PBXFileReference section */
 		A0B2E0A6E69D6DBE2D8A3710 /* Pods-onBoardingTask.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onBoardingTask.release.xcconfig"; path = "Target Support Files/Pods-onBoardingTask/Pods-onBoardingTask.release.xcconfig"; sourceTree = "<group>"; };
 		B95F4375196A1DF851848434 /* Pods-onBoardingTask.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onBoardingTask.debug.xcconfig"; path = "Target Support Files/Pods-onBoardingTask/Pods-onBoardingTask.debug.xcconfig"; sourceTree = "<group>"; };
+		C30902EC28AE5A8100F8AC6A /* ViewModeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModeType.swift; sourceTree = "<group>"; };
 		C347924E2872D2A300DC1BD9 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		C38BB159286EAD6300CFE959 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
@@ -114,6 +116,7 @@
 				C391CC16286C1AD200A21DD8 /* TabBarViewController.swift */,
 				C391CC1C286C3EED00A21DD8 /* DetailBookViewController.swift */,
 				C3A84DC6287414440019DEE1 /* AlertViewController.swift */,
+				C30902EC28AE5A8100F8AC6A /* ViewModeType.swift */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -349,6 +352,7 @@
 				C3A84DC7287414440019DEE1 /* AlertViewController.swift in Sources */,
 				C3A74C5628AC7334006FC293 /* MainStep.swift in Sources */,
 				C391CC1D286C3EED00A21DD8 /* DetailBookViewController.swift in Sources */,
+				C30902ED28AE5A8100F8AC6A /* ViewModeType.swift in Sources */,
 				C3A5803B287E55C3004A82EA /* String+.swift in Sources */,
 				C3EB834A286A976700D2A4BB /* Model.swift in Sources */,
 				C3FA976D287E829400E88403 /* NetworkModel.swift in Sources */,

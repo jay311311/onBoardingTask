@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let coordinator = FlowCoordinator()
         let appFlow = AppFlow()
         
-        coordinator.coordinate(flow: appFlow, with: AppStepper(), allowStepWhenDismissed: false)
+        coordinator.coordinate(flow: appFlow, with: AppStepper.shared, allowStepWhenDismissed: false)
         
         Flows.use(appFlow, when: .created) { [weak self] root in
             self?.window?.rootViewController = root

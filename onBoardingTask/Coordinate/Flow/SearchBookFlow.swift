@@ -22,9 +22,7 @@ class SearchBookFlow:Flow{
         guard let step = step as? MainStep else{ return .none}
         
         switch step {
-        case .Search:
-            return setSearchScreen()
-            
+    
         case .Back:
             return goToBack()
         default :
@@ -32,6 +30,12 @@ class SearchBookFlow:Flow{
 
         }
     }
+    
+    func goToDetail() -> FlowContributors{
+        
+        return .none
+    }
+    
     
     func setSearchScreen() -> FlowContributors{
         print("검색 세팅 한다")
@@ -44,6 +48,7 @@ class SearchBookFlow:Flow{
         
         return .none
     }
+   
     
     
 }

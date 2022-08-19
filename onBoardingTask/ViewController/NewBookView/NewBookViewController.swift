@@ -22,8 +22,6 @@ class NewBookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
-//        self.title = "New Books"
-//        TabBarViewController.shared.tabBarItem.title = "New"
         view.backgroundColor = .white
         bindTableView()
         refreshTableView()
@@ -61,7 +59,8 @@ class NewBookViewController: UIViewController {
             .subscribe(onNext: { [weak self] item in
                 guard let self = self else { return }
                 print("cell_ tap_subscribe : \(item.isbn13)")
-                self.pushToDetail(item.isbn13)
+                self.viewModel.pick(bookId: item.isbn13)
+//                self.pushToDetail(item.isbn13)
             })
             .disposed(by: disposeBag)
     }
@@ -100,7 +99,24 @@ extension NewBookViewController :  UITableViewDelegate{
 
 //MARK: - ViewModel
 class NewBooksViewModel:Stepper {
+//    func trasform(input: Input) -> Output {
+//        <#code#>
+//    }
+//
+//    struct Input {
+//        let requestTrigger = PublishRelay<Void>()
+//    }
+//
+//    struct Output{
+//        let booksRelay = PublishRelay<Void>()
+//    }
     var steps = PublishRelay<Step>()
+
+    public func pick(bookId : String){
+        print("여긴와?")
+        self.steps.accept(MainStep.Detail)
+    }
+
     
     lazy var netwroking = NetworkService.shared
     
