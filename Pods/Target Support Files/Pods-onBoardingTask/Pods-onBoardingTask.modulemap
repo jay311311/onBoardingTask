@@ -1,6 +1,0 @@
-framework module Pods_onBoardingTask {
-  umbrella header "Pods-onBoardingTask-umbrella.h"
-
-  export *
-  module * { export * }
-}
